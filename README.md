@@ -3,7 +3,7 @@
 Digital agriculture platform for farmers, suppliers, buyers and lenders in Sierra Leone.
 The full product spec is in [PRD.md](PRD.md); it is built one milestone at a time (PRD Section 12).
 
-**Status:** Milestones 1–5 complete: foundation, authentication and profiles, business verification, supplier directory, weather and crop guides.
+**Status:** Milestones 1–6 complete: foundation, authentication and profiles, business verification, supplier directory, weather and crop guides, AI farming assistant.
 
 ## Stack
 
@@ -22,6 +22,8 @@ npm run db:migrate                # apply migrations to the dev database
 npm run db:seed                   # districts, chiefdoms, crops, draft crop guides; sample suppliers in dev
 npm run dev                       # http://localhost:3000
 ```
+
+After a schema change (`npm run db:migrate`), restart `npm run dev`: in development the database client is kept in memory between reloads.
 
 ## Scripts
 
@@ -144,11 +146,35 @@ Last run: usable in about 1.1 s, loaded in about 2.4 s, 136 KB of JavaScript.
 - Pages never opened before show a saved offline page. Private pages (`/farmer`, `/business`, `/admin`, `/login`) are never saved.
 - A banner shows while the phone is offline. Bump `VERSION` in `sw.js` when its caching rules change.
 
+## AI farming assistant (Milestone 6)
+
+Farmers ask questions at `/farmer/assistant`. Reviewers see flagged answers at `/admin/ai` (admins and agronomists).
+
+- **Model:** Claude through the `AiProvider` adapter (`lib/adapters/ai`). `AI_PROVIDER=mock` (default) needs no key;
+  `AI_PROVIDER=anthropic` + `ANTHROPIC_API_KEY` calls `AI_MODEL` (default `claude-haiku-5-5`) with low effort and a cached system prompt.
+- **Grounding:** `lib/ai/retrieval.ts` picks up to 3 matching sections from **reviewed, published** guides and sends them
+  as numbered excerpts. The model cites them as [1], [2]; the page links each source to its guide section.
+  `AI_INCLUDE_SAMPLE_GUIDES=true` also uses unreviewed sample text (development only).
+- **Instructions:** `lib/ai/prompt.ts`: simple language, practical steps, Sierra Leone seasons, under 150 words,
+  extension officer for serious outbreaks and chemical use, no doses for agrochemicals.
+- **Safety rule** (`lib/ai/safety.ts`), enforced in code as well as in the prompt:
+  - A question asking for a dose of a hazardous pesticide (paraquat/Gramoxone, carbofuran/Furadan, endosulfan, …)
+    gets a fixed safe reply. The model is never called.
+  - A model answer that names a hazardous pesticide **and** states a quantity is replaced with the safe reply and flagged.
+  - The pesticide list should be reviewed by an agronomist.
+- **Limits:** 20 questions per farmer per day (`AI_DAILY_LIMIT`), 5 per minute. Failed calls aren't counted.
+- **Feedback:** 👍/👎 and "Report a problem" on every answer.
+- **Review queue:** farmer reports, safety replacements, refusals, and answers with no reviewed guide behind them
+  ("low confidence") go to the queue. A reviewer can add a correction, which the farmer sees under the answer;
+  every review is written to `AuditLog`.
+- **Storage:** conversations are saved for quality review, and the chat page says so.
+
 ## Known gaps
 
 - Chiefdoms are a starter sample (3 per district), not the full official list of ~190. Complete them from the Statistics Sierra Leone list before launch.
 - Only local-disk storage exists. Production needs S3/R2 implementations for both private documents and public media before launch.
 - The mock SMS provider refuses to start in production. A real SMS provider is Milestone 8.
 - Old rate-limit rows are not cleaned up automatically yet; `pruneRateLimitHits()` exists for a scheduled job.
+- The client IP for rate limiting is read from `x-forwarded-for`. That is safe behind Vercel (which sets it), but other hosts must be checked so clients can't spoof it.
 - The crop guide drafts must be reviewed by an agronomist before launch (PRD 14).
 - The Western Area has no chiefdoms; its rural districts and Freetown areas are stored in the chiefdom table instead.

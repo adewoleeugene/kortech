@@ -7,8 +7,11 @@ export type RateLimitResult = { allowed: true } | { allowed: false; retryAfterSe
 // Rate limits from the PRD 6.1 (numbers confirmed for Milestone 2).
 export const RATE_LIMITS = {
   otpRequestPerPhone: { limit: 3, windowMs: 15 * 60_000 },
-  otpRequestPerIp: { limit: 20, windowMs: 60 * 60_000 },
+  // Many farmers can share one IP (a cooperative's phone, mobile carrier NAT), so this is configurable.
+  otpRequestPerIp: { limit: Number(process.env.RATE_LIMIT_OTP_PER_IP) || 20, windowMs: 60 * 60_000 },
   otpVerifyPerIp: { limit: 50, windowMs: 60 * 60_000 },
+  // On top of the daily question limit: stops rapid-fire requests to the AI (PRD 7).
+  aiPerUserPerMinute: { limit: 5, windowMs: 60_000 },
 } satisfies Record<string, RateLimitRule>;
 
 // Sliding window backed by Postgres, so limits hold across server instances.

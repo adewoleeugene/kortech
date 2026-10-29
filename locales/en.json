@@ -83,7 +83,9 @@
     "findSuppliers": "Find suppliers",
     "findSuppliersHint": "Verified sellers of seeds, fertiliser and tools near you.",
     "weatherCard": "Weather in {district}",
-    "guidesCard": "Guides for your crops"
+    "guidesCard": "Guides for your crops",
+    "askCard": "Ask a farming question",
+    "askCardHint": "Get advice from SmartFarm, based on reviewed crop guides."
   },
   "business": {
     "title": "Business portal",
@@ -163,7 +165,9 @@
     "removeSponsored": "Remove sponsored",
     "hide": "Hide",
     "restore": "Restore",
-    "guides": "Crop guide editor"
+    "guides": "Crop guide editor",
+    "aiReview": "AI answer review",
+    "aiOpenCount": "{count} to review"
   },
   "forbidden": {
     "title": "You can't open this page",
@@ -377,5 +381,59 @@
     "title": "You are offline",
     "body": "This page is not saved on your phone yet. Crop guides and the weather you opened before still work offline.",
     "guides": "Open crop guides"
+  },
+  "assistant": {
+    "title": "Ask SmartFarm",
+    "intro": "Ask a farming question. Answers use SmartFarm crop guides checked by agronomists.",
+    "consent": "Your questions are saved so SmartFarm staff can check the quality of answers.",
+    "questionLabel": "Your question",
+    "questionPlaceholder": "e.g. When should I plant upland rice in Kenema?",
+    "ask": "Ask",
+    "asking": "Thinking…",
+    "newConversation": "Start a new conversation",
+    "remaining": "{count} of {limit} questions left today",
+    "you": "You",
+    "smartfarm": "SmartFarm",
+    "sources": "From the guides:",
+    "helpful": "Helpful",
+    "notHelpful": "Not helpful",
+    "rated": "Thanks for your feedback.",
+    "report": "Report a problem",
+    "reportNote": "What is wrong with this answer? (optional)",
+    "reportSend": "Send report",
+    "reported": "Reported. SmartFarm staff will check this answer.",
+    "corrected": "Corrected by SmartFarm:",
+    "empty": "No questions yet. Ask your first question below.",
+    "disclaimer": "Advice from SmartFarm is general. For serious pest or disease outbreaks, or before using any chemical, talk to your extension officer.",
+    "errorInvalid": "Write your question (3 to 500 characters).",
+    "errorDailyLimit": "You have used all {limit} questions for today. Come back tomorrow, or read the crop guides.",
+    "errorTooFast": "Please wait a minute before asking again.",
+    "errorUnavailable": "The assistant is not available right now. Please try again later, or read the crop guides.",
+    "safeChemicalReply": "I can't give doses or mixing rates for {chemical}. It is a hazardous chemical that can poison people, animals and water.\n\n- Talk to your local extension officer before using it. They can suggest safer ways to control the problem.\n- If you do use any chemical, follow the product label exactly.\n- Wear protective clothing, and keep chemicals away from children, food and water.",
+    "refusalReply": "I can't help with that question. Please ask your local extension officer, or try asking in a different way.",
+    "openAssistant": "Ask a farming question"
+  },
+  "adminAi": {
+    "title": "AI answer review",
+    "intro": "Answers reported by farmers or flagged automatically. Check them and add a correction if needed.",
+    "tabOPEN": "To review",
+    "tabRESOLVED": "Reviewed",
+    "none": "Nothing to review.",
+    "question": "Question",
+    "answer": "Answer",
+    "reason": "Why it is here",
+    "reason_farmer_report": "Reported by the farmer",
+    "reason_safety": "Safety rule replaced the answer",
+    "reason_low_confidence": "No reviewed guide behind the answer",
+    "reason_refusal": "The AI declined to answer",
+    "farmerNote": "Farmer's note: {note}",
+    "rating": "Farmer rating: {rating}",
+    "sources": "Guide sections used: {sources}",
+    "noSources": "No guide sections used",
+    "correctionLabel": "Correction for the farmer (optional)",
+    "correctionHint": "Leave empty if the answer is fine. At least 10 characters if you write one.",
+    "resolve": "Mark reviewed",
+    "errorCorrection": "Write at least 10 characters, or leave it empty.",
+    "reviewedBy": "Reviewed by {name}, {date}"
   }
 }

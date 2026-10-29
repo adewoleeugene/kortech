@@ -11,7 +11,10 @@ export default async function AdminHome() {
   const user = await requireArea("admin");
   const { t } = await getTranslator();
   const canVerify = canVerifyOrganisations(user.role);
-  const pending = canVerify ? await db.organisation.count({ where: { status: "PENDING" } }) : 0;
+  const [pending, aiOpen] = await Promise.all([
+    canVerify ? db.organisation.count({ where: { status: "PENDING" } }) : 0,
+    db.aiMessage.count({ where: { role: "ASSISTANT", reviewStatus: "OPEN" } }),
+  ]);
 
   return (
     <div className="space-y-6">
@@ -30,6 +33,15 @@ export default async function AdminHome() {
           </span>
         </Link>
       ) : null}
+      <Link href="/admin/ai" className="flex min-h-16 items-center justify-between gap-3 rounded-lg border-2 border-border px-4 py-3 hover:border-brand">
+        <span className="flex items-center gap-2 font-semibold">
+          <span aria-hidden>💬</span>
+          {t("admin.aiReview")}
+        </span>
+        <span className="shrink-0 whitespace-nowrap rounded-full bg-brand-soft px-3 py-1 text-sm font-semibold">
+          {t("admin.aiOpenCount", { count: aiOpen })}
+        </span>
+      </Link>
       <Link href="/admin/guides" className="flex min-h-16 items-center gap-2 rounded-lg border-2 border-border px-4 py-3 font-semibold hover:border-brand">
         <span aria-hidden>🌱</span>
         {t("admin.guides")}

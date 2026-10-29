@@ -41,6 +41,12 @@ export default defineConfig({
       STORAGE_SIGNING_SECRET: "e2e-storage-secret",
       MEDIA_LOCAL_DIR: ".data/e2e-media",
       WEATHER_PROVIDER: "mock",
+      // Every e2e sign-in comes from the same IP address.
+      RATE_LIMIT_OTP_PER_IP: "500",
+      AI_PROVIDER: "mock",
+      AI_DAILY_LIMIT: "20",
+      // e2e guides are labelled samples, so let the assistant cite them.
+      AI_INCLUDE_SAMPLE_GUIDES: "true",
     },
   },
 });

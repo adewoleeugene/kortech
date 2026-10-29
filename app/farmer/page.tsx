@@ -11,7 +11,6 @@ import { describeWeather } from "@/lib/weather/tips";
 export const metadata: Metadata = { title: "My farm" };
 
 const upcoming: { key: TranslationKey; icon: string }[] = [
-  { key: "home.featureAdvice", icon: "🌱" },
   { key: "home.featureMarket", icon: "🧺" },
   { key: "home.featureFinance", icon: "🏦" },
 ];
@@ -35,6 +34,14 @@ export default async function FarmerDashboard() {
   return (
     <div className="space-y-8">
       <h1 className="text-2xl font-bold">{t("farmer.welcome", { name: user.name ?? "" })}</h1>
+
+      <Link href="/farmer/assistant" className="flex min-h-16 items-center gap-3 rounded-lg bg-brand px-4 py-3 text-brand-foreground">
+        <span aria-hidden className="text-2xl">💬</span>
+        <span>
+          <span className="block text-lg font-semibold">{t("farmer.askCard")}</span>
+          <span className="block text-sm opacity-90">{t("farmer.askCardHint")}</span>
+        </span>
+      </Link>
 
       <section className="space-y-3 rounded-lg border-2 border-border p-4" aria-labelledby="weather-heading">
         <h2 id="weather-heading" className="text-lg font-semibold">{t("farmer.weatherCard", { district: profile.district.name })}</h2>

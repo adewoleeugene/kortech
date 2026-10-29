@@ -70,3 +70,17 @@ export async function setRole(e164: string, role: Role, name?: string) {
     await db.$disconnect();
   }
 }
+
+// Records questions as already asked today, to test the daily limit without 20 slow round trips.
+export async function addQuestionsToday(e164: string, count: number) {
+  const db = new PrismaClient({ datasourceUrl: process.env.TEST_DATABASE_URL });
+  try {
+    const user = await db.user.findUniqueOrThrow({ where: { phone: e164 } });
+    const conversation = await db.aiConversation.create({ data: { userId: user.id } });
+    await db.aiMessage.createMany({
+      data: Array.from({ length: count }, (_, i) => ({ conversationId: conversation.id, role: "USER" as const, content: `Earlier question ${i}` })),
+    });
+  } finally {
+    await db.$disconnect();
+  }
+}

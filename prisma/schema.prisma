@@ -66,21 +66,23 @@ enum FarmSizeUnit {
 }
 
 model User {
-  id             String         @id @default(cuid())
+  id              String           @id @default(cuid())
   // E.164, e.g. +23276123456
-  phone          String         @unique
-  name           String?
-  role           Role           @default(FARMER)
-  language       String         @default("en")
-  createdAt      DateTime       @default(now())
-  deletedAt      DateTime?
-  farmerProfile  FarmerProfile?
-  sessions       Session[]
-  memberships    OrgMember[]
-  verifiedOrgs   Organisation[] @relation("VerifiedBy")
-  auditLogs      AuditLog[]
-  reviewedGuides CropGuide[]    @relation("GuideReviewedBy")
-  editedGuides   CropGuide[]    @relation("GuideUpdatedBy")
+  phone           String           @unique
+  name            String?
+  role            Role             @default(FARMER)
+  language        String           @default("en")
+  createdAt       DateTime         @default(now())
+  deletedAt       DateTime?
+  farmerProfile   FarmerProfile?
+  sessions        Session[]
+  memberships     OrgMember[]
+  verifiedOrgs    Organisation[]   @relation("VerifiedBy")
+  auditLogs       AuditLog[]
+  reviewedGuides  CropGuide[]      @relation("GuideReviewedBy")
+  editedGuides    CropGuide[]      @relation("GuideUpdatedBy")
+  aiConversations AiConversation[]
+  reviewedAnswers AiMessage[]      @relation("AiReviewedBy")
 }
 
 model FarmerProfile {
@@ -326,4 +328,57 @@ model CropGuide {
 
   @@unique([cropId, section])
   @@index([published])
+}
+
+// ---------- AI farming assistant (Milestone 6) ----------
+
+enum AiRole {
+  USER
+  ASSISTANT
+}
+
+enum AiReviewStatus {
+  NONE
+  // Waiting in the admin review queue.
+  OPEN
+  RESOLVED
+}
+
+// Conversations are kept for quality review (PRD 6.3; farmers are told above the chat).
+model AiConversation {
+  id        String      @id @default(cuid())
+  userId    String
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  messages  AiMessage[]
+
+  @@index([userId, updatedAt])
+}
+
+model AiMessage {
+  id             String         @id @default(cuid())
+  conversationId String
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           AiRole
+  content        String
+  // Assistant only: guide sections given to the model, as [{ crop, cropSlug, section }].
+  sources        Json           @default("[]")
+  // Assistant only: which model (or "safety-rule") produced the answer.
+  model          String?
+  rating         Int?
+  flagged        Boolean        @default(false)
+  // "farmer_report" | "safety" | "low_confidence" | "refusal"
+  flagReason     String?
+  reportNote     String?
+  reviewStatus   AiReviewStatus @default(NONE)
+  // Reviewer's corrected answer, shown to the farmer under the original.
+  correction     String?
+  reviewedById   String?
+  reviewedBy     User?          @relation("AiReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt     DateTime?
+  createdAt      DateTime       @default(now())
+
+  @@index([conversationId, createdAt])
+  @@index([reviewStatus, createdAt])
 }

@@ -23,7 +23,8 @@ export type OnboardingLabels = Record<
   string
 >;
 
-const inputClass = "min-h-12 w-full rounded-lg border-2 border-border bg-background px-4 text-lg";
+const fieldClass = "min-h-12 rounded-lg border-2 border-border bg-background px-4 text-lg";
+const inputClass = `${fieldClass} w-full`;
 
 export function OnboardingForm({
   districts,
@@ -96,8 +97,8 @@ export function OnboardingForm({
         <div className="flex gap-2">
           <input id="farmSize" name="farmSize" type="number" inputMode="decimal" min="0" step="0.01"
             defaultValue={defaults.farmSize} aria-invalid={!!errors.farmSize} aria-describedby="farm-size-error"
-            className={`${inputClass} flex-1`} />
-          <select name="farmSizeUnit" aria-label={labels.unitLabel} defaultValue={defaults.farmSizeUnit} className={`${inputClass} w-36`}>
+            className={`${fieldClass} min-w-0 flex-1`} />
+          <select name="farmSizeUnit" aria-label={labels.unitLabel} defaultValue={defaults.farmSizeUnit} className={`${fieldClass} w-36 shrink-0`}>
             <option value="ACRE">{labels.unitAcre}</option>
             <option value="HECTARE">{labels.unitHectare}</option>
           </select>
