@@ -1,0 +1,41 @@
+// SmartFarm Sierra Leone — database schema.
+// Milestone 1 holds reference data only; later milestones add their models here.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model District {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  slug      String     @unique
+  province  String
+  // Forecast point: the district headquarter town (see prisma/data/districts.ts).
+  latitude  Float
+  longitude Float
+  chiefdoms Chiefdom[]
+}
+
+model Chiefdom {
+  id         String   @id @default(cuid())
+  name       String
+  districtId String
+  district   District @relation(fields: [districtId], references: [id], onDelete: Cascade)
+
+  @@unique([districtId, name])
+  @@index([districtId])
+}
+
+model Crop {
+  id         String  @id @default(cuid())
+  name       String  @unique
+  slug       String  @unique
+  // Groups crops for display, e.g. vegetables (pepper, okra, tomato).
+  group      String
+  isPriority Boolean @default(false)
+}

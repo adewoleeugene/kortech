@@ -1,0 +1,35 @@
+{
+  "app": {
+    "name": "SmartFarm Sierra Leone",
+    "shortName": "SmartFarm",
+    "tagline": "Farming advice, weather, suppliers and buyers in one place."
+  },
+  "nav": {
+    "home": "Home",
+    "skipToContent": "Skip to main content"
+  },
+  "home": {
+    "title": "Grow more, sell better",
+    "intro": "SmartFarm helps farmers in all 16 districts of Sierra Leone get advice, weather, inputs and buyers.",
+    "farmerCta": "I am a farmer",
+    "businessCta": "I run a business",
+    "comingSoon": "Sign-in opens soon.",
+    "featureAdvice": "Farming advice",
+    "featureWeather": "Weather for your district",
+    "featureSuppliers": "Verified suppliers",
+    "featureMarket": "Sell your produce",
+    "featureFinance": "Loans from partner lenders",
+    "districtsServed": "Districts served: {count}"
+  },
+  "errors": {
+    "title": "Something went wrong",
+    "body": "Please try again. If it keeps happening, come back later.",
+    "retry": "Try again",
+    "notFoundTitle": "Page not found",
+    "notFoundBody": "We could not find that page.",
+    "backHome": "Go to home"
+  },
+  "footer": {
+    "copyright": "© {year} SmartFarm Sierra Leone"
+  }
+}
