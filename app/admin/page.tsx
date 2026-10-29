@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Icon } from "@/components/icons";
 import Link from "next/link";
 import { canVerifyOrganisations } from "@/lib/auth/access";
 import { requireArea } from "@/lib/auth/server";
@@ -25,7 +26,7 @@ export default async function AdminHome() {
       {canVerify ? (
         <Link href="/admin/organisations" className="flex min-h-16 items-center justify-between gap-3 rounded-lg border-2 border-border px-4 py-3 hover:border-brand">
           <span className="flex items-center gap-2 font-semibold">
-            <span aria-hidden>🏢</span>
+            <Icon name="building" className="text-brand" />
             {t("admin.verificationQueue")}
           </span>
           <span className="shrink-0 whitespace-nowrap rounded-full bg-brand-soft px-3 py-1 text-sm font-semibold">
@@ -35,7 +36,7 @@ export default async function AdminHome() {
       ) : null}
       <Link href="/admin/ai" className="flex min-h-16 items-center justify-between gap-3 rounded-lg border-2 border-border px-4 py-3 hover:border-brand">
         <span className="flex items-center gap-2 font-semibold">
-          <span aria-hidden>💬</span>
+          <Icon name="chat" className="text-brand" />
           {t("admin.aiReview")}
         </span>
         <span className="shrink-0 whitespace-nowrap rounded-full bg-brand-soft px-3 py-1 text-sm font-semibold">
@@ -43,12 +44,12 @@ export default async function AdminHome() {
         </span>
       </Link>
       <Link href="/admin/guides" className="flex min-h-16 items-center gap-2 rounded-lg border-2 border-border px-4 py-3 font-semibold hover:border-brand">
-        <span aria-hidden>🌱</span>
+        <Icon name="book" className="text-brand" />
         {t("admin.guides")}
       </Link>
       {canVerify ? (
         <Link href="/admin/listings" className="flex min-h-16 items-center gap-2 rounded-lg border-2 border-border px-4 py-3 font-semibold hover:border-brand">
-          <span aria-hidden>🧰</span>
+          <Icon name="store" className="text-brand" />
           {t("admin.listings")}
         </Link>
       ) : (

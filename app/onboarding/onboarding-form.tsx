@@ -23,7 +23,7 @@ export type OnboardingLabels = Record<
   string
 >;
 
-const fieldClass = "min-h-12 rounded-lg border-2 border-border bg-background px-4 text-lg";
+const fieldClass = "min-h-12 rounded-xl border-[1.5px] border-border bg-surface px-4 text-lg";
 const inputClass = `${fieldClass} w-full`;
 
 export function OnboardingForm({
@@ -83,7 +83,7 @@ export function OnboardingForm({
         <p id="crops-hint" className="text-sm text-muted">{labels.cropsHint}</p>
         <div className="grid grid-cols-2 gap-2">
           {crops.map((c) => (
-            <label key={c.id} className="flex min-h-12 items-center gap-3 rounded-lg border-2 border-border px-3 has-[:checked]:border-brand has-[:checked]:bg-brand-soft">
+            <label key={c.id} className="flex min-h-12 items-center gap-3 rounded-xl border-[1.5px] border-border bg-surface px-3 has-[:checked]:border-brand has-[:checked]:bg-brand-soft">
               <input type="checkbox" name="cropIds" value={c.id} defaultChecked={defaults.cropIds.includes(c.id)} className="size-5 accent-brand" />
               <span>{c.name}</span>
             </label>

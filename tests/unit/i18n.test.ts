@@ -10,11 +10,11 @@ describe("translator", () => {
   });
 
   it("interpolates variables", () => {
-    expect(t("home.districtsServed", { count: 16 })).toBe("Districts served: 16");
+    expect(t("assistant.remaining", { count: 3, limit: 20 })).toBe("3 of 20 questions left today");
   });
 
   it("leaves unknown placeholders untouched", () => {
-    expect(t("home.districtsServed", {})).toBe("Districts served: {count}");
+    expect(t("weather.rain", {})).toBe("{mm} mm rain");
   });
 
   it("falls back to the key for a missing translation instead of throwing", () => {

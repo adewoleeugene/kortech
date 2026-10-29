@@ -169,6 +169,19 @@ Farmers ask questions at `/farmer/assistant`. Reviewers see flagged answers at `
   every review is written to `AuditLog`.
 - **Storage:** conversations are saved for quality review, and the chat page says so.
 
+## Design: one website that works like an app
+
+The look follows the SmartFarm design canvas: deep farm green (`#146B3A`), sun-yellow accent (`#F2B33D`),
+Bricolage Grotesque headings and Figtree text (self-hosted by `next/font`), and stroke icons (`components/icons.tsx`).
+Colours are tokens in `app/globals.css` (`bg-brand`, `bg-sun-soft`, `text-muted`…).
+
+- **Responsive website:** wide screens get the top menu and multi-column pages. Pages opt into a wide column with
+  `className="wide"`, or full width with `className="bleed"` (see `app/layout.tsx`).
+- **Phone app (PWA):** on phones, farmers get a bottom tab bar (Home, Guides, Ask, Suppliers, Weather). From the browser
+  menu, "Add to home screen" installs it with the SmartFarm icon, full-screen display and shortcuts to Ask, Weather and Guides
+  (`app/manifest.ts`). Guides and the last forecast still work offline.
+- **Home page:** farmers sign in straight from the hero card; signed-in users go straight to their dashboard.
+
 ## Known gaps
 
 - Chiefdoms are a starter sample (3 per district), not the full official list of ~190. Complete them from the Statistics Sierra Leone list before launch.

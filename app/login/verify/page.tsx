@@ -16,9 +16,10 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
   const display = formatPhoneForDisplay(phone);
 
   return (
-    <div className="space-y-6">
+    <div>
+      <div className="mx-auto max-w-md space-y-6 rounded-3xl border border-border bg-surface p-6 sm:p-8">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold">{t("login.verifyTitle")}</h1>
+        <h1 className="text-3xl font-bold">{t("login.verifyTitle")}</h1>
         <p className="text-muted">{t("login.verifyIntro", { phone: display })}</p>
       </div>
       <VerifyForm
@@ -34,6 +35,7 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
           {t("login.changeNumber")}
         </Link>
       </p>
+      </div>
     </div>
   );
 }

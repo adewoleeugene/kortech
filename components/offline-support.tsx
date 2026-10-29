@@ -1,4 +1,5 @@
 "use client";
+import { Icon } from "./icons";
 
 import { useEffect, useState } from "react";
 
@@ -23,8 +24,8 @@ export function OfflineSupport({ bannerText }: { bannerText: string }) {
 
   if (!offline) return null;
   return (
-    <p role="status" className="bg-amber-200 px-4 py-2 text-center text-sm font-semibold text-amber-950">
-      📴 {bannerText}
+    <p role="status" className="bg-sun-soft px-4 py-2 text-center text-sm font-semibold text-sun-ink">
+      <Icon name="wifiOff" size={18} className="mr-1.5 inline align-[-3px]" /> {bannerText}
     </p>
   );
 }

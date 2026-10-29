@@ -59,7 +59,7 @@ export default async function AiReviewPage({ searchParams }: { searchParams: Pro
                     : t("adminAi.noSources")}
                 </p>
                 {answer.reportNote && <p className="text-sm">{t("adminAi.farmerNote", { note: answer.reportNote })}</p>}
-                {answer.rating !== null && <p className="text-sm">{t("adminAi.rating", { rating: answer.rating > 0 ? "👍" : "👎" })}</p>}
+                {answer.rating !== null && <p className="text-sm">{t("adminAi.rating", { rating: answer.rating > 0 ? t("assistant.helpful") : t("assistant.notHelpful") })}</p>}
                 {status === "OPEN" ? (
                   <ReviewForm
                     messageId={answer.id}

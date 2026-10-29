@@ -11,7 +11,7 @@ export const metadata: Metadata = { title: "Find suppliers" };
 
 type RawParams = { q?: string; category?: string; district?: string; page?: string };
 
-const inputClass = "min-h-12 w-full rounded-lg border-2 border-border bg-background px-3 text-base";
+const inputClass = "min-h-12 w-full rounded-xl border-[1.5px] border-border bg-surface px-3.5 text-base";
 
 // Public: anyone can browse verified suppliers. Plain GET form so filters work without JavaScript.
 export default async function SuppliersPage({ searchParams }: { searchParams: Promise<RawParams> }) {
@@ -42,19 +42,19 @@ export default async function SuppliersPage({ searchParams }: { searchParams: Pr
   };
 
   return (
-    <div className="space-y-6">
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold">{t("suppliers.title")}</h1>
+    <div className="wide space-y-5">
+      <div className="space-y-1">
+        <h1 className="text-3xl font-bold sm:text-4xl">{t("suppliers.title")}</h1>
         <p className="text-muted">{t("suppliers.intro")}</p>
       </div>
 
-      <form method="get" action="/suppliers" className="grid gap-3 rounded-lg bg-surface p-4 sm:grid-cols-2" role="search">
-        <div className="space-y-1 sm:col-span-2">
-          <label htmlFor="q" className="block font-semibold">{t("suppliers.searchLabel")}</label>
+      <form method="get" action="/suppliers" className="flex flex-wrap gap-3 rounded-[20px] border border-border bg-surface p-4" role="search">
+        <div className="flex-[2_1_260px] space-y-1">
+          <label htmlFor="q" className="block text-sm font-bold">{t("suppliers.searchLabel")}</label>
           <input id="q" name="q" type="search" defaultValue={params.q ?? ""} placeholder={t("suppliers.searchPlaceholder")} className={inputClass} />
         </div>
-        <div className="space-y-1">
-          <label htmlFor="category" className="block font-semibold">{t("suppliers.categoryLabel")}</label>
+        <div className="flex-[1_1_170px] space-y-1">
+          <label htmlFor="category" className="block text-sm font-bold">{t("suppliers.categoryLabel")}</label>
           <select id="category" name="category" defaultValue={params.category ?? ""} className={inputClass}>
             <option value="">{t("suppliers.allCategories")}</option>
             {SUPPLIER_CATEGORIES.map((c) => (
@@ -62,8 +62,8 @@ export default async function SuppliersPage({ searchParams }: { searchParams: Pr
             ))}
           </select>
         </div>
-        <div className="space-y-1">
-          <label htmlFor="district" className="block font-semibold">{t("suppliers.districtLabel")}</label>
+        <div className="flex-[1_1_170px] space-y-1">
+          <label htmlFor="district" className="block text-sm font-bold">{t("suppliers.districtLabel")}</label>
           <select id="district" name="district" defaultValue={params.districtId ?? "all"} className={inputClass}>
             <option value="all">{t("suppliers.allDistricts")}</option>
             {districts.map((d) => (
@@ -71,7 +71,7 @@ export default async function SuppliersPage({ searchParams }: { searchParams: Pr
             ))}
           </select>
         </div>
-        <button type="submit" className="min-h-12 rounded-lg bg-brand px-6 font-semibold text-brand-foreground sm:col-span-2">
+        <button type="submit" className="min-h-12 flex-[0_1_140px] self-end rounded-xl bg-brand px-6 font-bold text-white hover:bg-brand-dark">
           {t("suppliers.apply")}
         </button>
       </form>
@@ -83,7 +83,7 @@ export default async function SuppliersPage({ searchParams }: { searchParams: Pr
       {result.listings.length === 0 ? (
         <p className="text-muted">{t("suppliers.noResults")}</p>
       ) : (
-        <ul className="space-y-3">
+        <ul className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,330px),1fr))] gap-4">
           {result.listings.map((listing) => (
             <li key={listing.id}>
               <ListingCard listing={listing} t={t} locale={locale} />

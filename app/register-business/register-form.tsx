@@ -27,7 +27,7 @@ export type RegisterLabels = Record<
   string
 >;
 
-const inputClass = "min-h-12 w-full rounded-lg border-2 border-border bg-background px-4 text-lg";
+const inputClass = "min-h-12 w-full rounded-xl border-[1.5px] border-border bg-surface px-4 text-lg";
 const TYPES: OrgType[] = ["SUPPLIER", "BUYER", "LENDER"];
 
 export function RegisterForm({

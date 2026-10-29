@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Icon } from "@/components/icons";
 import Link from "next/link";
 import { requireArea } from "@/lib/auth/server";
 import { getOrganisationForUser, isEditable, requiredDocuments } from "@/lib/business/organisation";
@@ -88,7 +89,11 @@ export default async function BusinessHome() {
                 <p className="font-semibold">{label}</p>
                 {type === "LICENCE" && <p className="text-sm text-muted">{t("business.docLicenceHelp")}</p>}
                 <p className="text-sm" data-testid={`doc-${type}`}>
-                  {doc ? `✅ ${t("business.uploaded", { name: doc.fileName })}` : `⬜ ${t("business.notUploaded")}`}
+                  {doc ? (
+                    <span className="inline-flex items-center gap-1.5 font-semibold text-brand"><Icon name="check" size={16} /> {t("business.uploaded", { name: doc.fileName })}</span>
+                  ) : (
+                    <span className="inline-flex items-center gap-1.5 text-muted"><Icon name="file" size={16} /> {t("business.notUploaded")}</span>
+                  )}
                 </p>
                 {editable && (
                   <DocumentUploadForm

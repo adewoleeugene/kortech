@@ -2,33 +2,54 @@
   "app": {
     "name": "SmartFarm Sierra Leone",
     "shortName": "SmartFarm",
-    "tagline": "Farming advice, weather, suppliers and buyers in one place."
+    "tagline": "Farming advice, weather, suppliers and buyers in one place.",
+    "shortcutAsk": "Ask a question",
+    "shortcutWeather": "Weather",
+    "shortcutGuides": "Crop guides"
   },
   "nav": {
     "home": "Home",
     "skipToContent": "Skip to main content",
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "myDashboard": "My dashboard"
+    "myDashboard": "My dashboard",
+    "main": "Main",
+    "suppliers": "Suppliers",
+    "guides": "Crop guides",
+    "weather": "Weather",
+    "ask": "Ask SmartFarm",
+    "myBusiness": "My business",
+    "admin": "Admin console",
+    "adminBadge": "Admin",
+    "tabHome": "Home",
+    "tabGuides": "Guides",
+    "tabAsk": "Ask",
+    "tabSuppliers": "Suppliers",
+    "tabWeather": "Weather"
   },
   "home": {
-    "title": "Grow more, sell better",
-    "intro": "SmartFarm helps farmers in all 16 districts of Sierra Leone get advice, weather, inputs and buyers.",
-    "farmerCta": "I am a farmer",
+    "title": "Grow more.\nSell better.",
+    "intro": "Farming advice checked by agronomists, weather for your district, and verified suppliers, in one place. Works on any phone browser, even on a slow connection.",
     "businessCta": "I run a business",
     "featureAdvice": "Farming advice",
     "featureWeather": "Weather for your district",
     "featureSuppliers": "Verified suppliers",
-    "featureMarket": "Sell your produce",
-    "featureFinance": "Loans from partner lenders",
-    "districtsServed": "Districts served: {count}",
-    "businessHint": "Suppliers, buyers and lenders: sign in with your phone, then register your organisation."
+    "kicker": "For farmers in all 16 districts",
+    "businessLine": "Suppliers, buyers and lenders:",
+    "featuresTitle": "Everything a farmer needs, on one site",
+    "featureAdviceBody": "Crop guides for rice, cassava, maize and more, reviewed by agronomists. Ask questions any time.",
+    "featureWeatherBody": "A 7-day forecast with simple tips, like when to hold off on fertiliser.",
+    "featureSuppliersBody": "Seeds, fertiliser and tools from businesses SmartFarm has checked. Call or WhatsApp them.",
+    "featureMarketBody": "Sell your produce to buyers and reach partner lenders. Coming soon.",
+    "featureMarketTitle": "Buyers and loans",
+    "ussd": "On a basic phone? Weather, crop tips and suppliers are coming by USSD too.",
+    "installHint": "Add SmartFarm to your home screen from your browser menu to use it like an app."
   },
   "login": {
     "title": "Sign in with your phone",
     "intro": "We will send a 6-digit code by SMS. No email or password needed.",
     "phoneLabel": "Phone number",
-    "phoneHint": "Sierra Leone number, for example 076 123 456",
+    "phoneHint": "Your mobile number, for example 76 123 456 (Africell, Orange or Qcell)",
     "sendCode": "Send code",
     "invalidPhone": "Enter a valid Sierra Leone phone number, for example 076 123 456.",
     "rateLimited": "Too many codes requested. Please wait {minutes} minutes and try again.",
@@ -78,14 +99,18 @@
     "farmSizeValue": "{size} {unit}",
     "notSet": "Not set",
     "editProfile": "Edit farm details",
-    "comingSoon": "Coming soon",
-    "comingSoonIntro": "These services are being added to SmartFarm:",
     "findSuppliers": "Find suppliers",
     "findSuppliersHint": "Verified sellers of seeds, fertiliser and tools near you.",
     "weatherCard": "Weather in {district}",
     "guidesCard": "Guides for your crops",
     "askCard": "Ask a farming question",
-    "askCardHint": "Get advice from SmartFarm, based on reviewed crop guides."
+    "askCardHint": "Get advice from SmartFarm, based on reviewed crop guides.",
+    "low": "low {temp}°",
+    "soon": "Soon",
+    "sellTitle": "Sell produce",
+    "sellHint": "Reach buyers",
+    "loansTitle": "Farm loans",
+    "loansHint": "Partner lenders"
   },
   "business": {
     "title": "Business portal",
@@ -182,7 +207,8 @@
     "backHome": "Go to home"
   },
   "footer": {
-    "copyright": "© {year} SmartFarm Sierra Leone"
+    "copyright": "© {year} SmartFarm Sierra Leone",
+    "tagline": "Made for farmers in Sierra Leone"
   },
   "registerBusiness": {
     "title": "Register your organisation",
@@ -354,7 +380,10 @@
     "group_root": "Roots and tubers",
     "group_legume": "Legumes",
     "group_tree": "Tree crops",
-    "group_vegetable": "Vegetables"
+    "group_vegetable": "Vegetables",
+    "savedOfflineShort": "Saved for offline reading",
+    "askAbout": "Ask a question about {crop}",
+    "findInputs": "Find seed and inputs near you"
   },
   "adminGuides": {
     "title": "Crop guide editor",
@@ -404,14 +433,18 @@
     "reported": "Reported. SmartFarm staff will check this answer.",
     "corrected": "Corrected by SmartFarm:",
     "empty": "No questions yet. Ask your first question below.",
-    "disclaimer": "Advice from SmartFarm is general. For serious pest or disease outbreaks, or before using any chemical, talk to your extension officer.",
+    "disclaimer": "SmartFarm never gives doses for hazardous chemicals. For serious pest or disease outbreaks, or before using any chemical, talk to your extension officer.",
     "errorInvalid": "Write your question (3 to 500 characters).",
     "errorDailyLimit": "You have used all {limit} questions for today. Come back tomorrow, or read the crop guides.",
     "errorTooFast": "Please wait a minute before asking again.",
     "errorUnavailable": "The assistant is not available right now. Please try again later, or read the crop guides.",
     "safeChemicalReply": "I can't give doses or mixing rates for {chemical}. It is a hazardous chemical that can poison people, animals and water.\n\n- Talk to your local extension officer before using it. They can suggest safer ways to control the problem.\n- If you do use any chemical, follow the product label exactly.\n- Wear protective clothing, and keep chemicals away from children, food and water.",
     "refusalReply": "I can't help with that question. Please ask your local extension officer, or try asking in a different way.",
-    "openAssistant": "Ask a farming question"
+    "openAssistant": "Ask a farming question",
+    "tryAsking": "Try asking",
+    "example1": "When do I transplant swamp rice?",
+    "example2": "My cassava leaves are yellow and twisted",
+    "example3": "How do I store groundnuts safely?"
   },
   "adminAi": {
     "title": "AI answer review",

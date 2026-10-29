@@ -3,8 +3,8 @@ import { newLocalPhone, readOtp, setRole, signInWithPhone } from "./helpers";
 
 test("a new farmer signs up with a phone code and reaches the dashboard", async ({ page }) => {
   const phone = newLocalPhone();
+  // Farmers sign in straight from the home page.
   await page.goto("/");
-  await page.getByRole("link", { name: "I am a farmer" }).click();
   await expect(page.getByRole("heading", { name: "Sign in with your phone" })).toBeVisible();
 
   await page.getByLabel("Phone number").fill(phone.local);
@@ -29,7 +29,7 @@ test("a new farmer signs up with a phone code and reaches the dashboard", async 
   await expect(page).toHaveURL(/\/farmer$/);
   await expect(page.getByRole("heading", { name: "Welcome, Fatmata Kamara" })).toBeVisible();
   await expect(page.getByText("Kakua")).toBeVisible();
-  await expect(page.getByText("Cassava, Rice")).toBeVisible();
+  await expect(page.getByText("Cassava, Rice", { exact: true })).toBeVisible();
   await expect(page.getByText("3 Acres")).toBeVisible();
 
   // Signing in again skips onboarding.

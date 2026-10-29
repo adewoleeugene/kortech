@@ -8,6 +8,7 @@ async function startBusinessSignUp(page: Page) {
   const phone = newLocalPhone();
   await page.goto("/");
   await page.getByRole("link", { name: "I run a business" }).click();
+  await expect(page).toHaveURL(/\/login\?next=/);
   await page.getByLabel("Phone number").fill(phone.local);
   await page.getByRole("button", { name: "Send code" }).click();
   await page.getByLabel("6-digit code").fill(await readOtp(phone.e164));

@@ -12,9 +12,16 @@ export default function manifest(): MetadataRoute.Manifest {
     scope: "/",
     display: "standalone",
     orientation: "portrait",
-    background_color: "#ffffff",
-    theme_color: "#166534",
+    background_color: "#f5f6f1",
+    theme_color: "#146b3a",
+    categories: ["agriculture", "education", "weather"],
     lang: defaultLocale,
+    // Long-press the home-screen icon for these (Android).
+    shortcuts: [
+      { name: t("app.shortcutAsk"), url: "/farmer/assistant", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+      { name: t("app.shortcutWeather"), url: "/weather", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+      { name: t("app.shortcutGuides"), url: "/guides", icons: [{ src: "/icons/icon-192.png", sizes: "192x192" }] },
+    ],
     icons: [
       { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
       { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },

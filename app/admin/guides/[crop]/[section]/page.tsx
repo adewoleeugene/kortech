@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Icon } from "@/components/icons";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GuideContent } from "@/components/guide-content";
@@ -47,7 +48,7 @@ export default async function EditGuideSectionPage({ params }: { params: Promise
           <input type="hidden" name="cropSlug" value={slug} />
           {status !== "published" && (
             <button type="submit" name="change" value="publish" className="min-h-12 rounded-lg border-2 border-brand px-5 font-semibold text-brand">
-              ✅ {t("adminGuides.reviewPublish")}
+              <Icon name="check" size={18} className="inline" /> {t("adminGuides.reviewPublish")}
             </button>
           )}
           {guide.published && (

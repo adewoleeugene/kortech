@@ -26,7 +26,7 @@ export function VerifyForm({ labels, next }: { labels: Labels; next?: string }) 
             pattern="[0-9 ]*"
             maxLength={7}
             required
-            className="min-h-12 w-full rounded-lg border-2 border-border bg-background px-4 text-center text-2xl tracking-[0.4em]"
+            className="min-h-14 w-full rounded-2xl border-2 border-brand bg-surface px-4 text-center text-2xl tracking-[0.4em] focus:ring-4 focus:ring-brand/20 focus:outline-none"
           />
         </div>
         <FormMessage error={state.error} />

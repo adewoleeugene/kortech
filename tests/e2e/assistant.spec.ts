@@ -56,7 +56,7 @@ test("a farmer asks a question, gets an answer citing the guide, rates it and re
   const item = reviewer.getByTestId("review-item").filter({ hasText: "Birds are eating my rice" });
   await expect(item).toContainText("Reported by the farmer");
   await expect(item).toContainText("Farmer's note: Scarecrows don't work on my farm");
-  await expect(item).toContainText("Farmer rating: 👎");
+  await expect(item).toContainText("Farmer rating: Not helpful");
   await item.getByLabel("Correction for the farmer (optional)").fill("Guard the field early in the morning and evening when birds feed, and harvest on time.");
   await item.getByRole("button", { name: "Mark reviewed" }).click();
   await expect(reviewer.getByTestId("review-item").filter({ hasText: "Birds are eating my rice" })).toHaveCount(0);

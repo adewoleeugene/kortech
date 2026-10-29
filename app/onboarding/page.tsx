@@ -25,9 +25,10 @@ export default async function OnboardingPage() {
   ]);
 
   return (
-    <div className="space-y-6">
+    <div>
+      <div className="mx-auto max-w-2xl space-y-6 rounded-3xl border border-border bg-surface p-6 sm:p-8">
       <div className="space-y-2">
-        <h1 className="text-2xl font-bold">{t("onboarding.title")}</h1>
+        <h1 className="text-3xl font-bold">{t("onboarding.title")}</h1>
         <p className="text-muted">{t("onboarding.intro")}</p>
       </div>
       <OnboardingForm
@@ -57,6 +58,7 @@ export default async function OnboardingPage() {
           save: t("onboarding.save"),
         }}
       />
+      </div>
     </div>
   );
 }

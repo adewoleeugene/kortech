@@ -24,7 +24,7 @@ export type ListingLabels = Record<
   string
 >;
 
-const inputClass = "min-h-12 w-full rounded-lg border-2 border-border bg-background px-4 text-lg";
+const inputClass = "min-h-12 w-full rounded-xl border-[1.5px] border-border bg-surface px-4 text-lg";
 
 export function ListingForm({
   action,
@@ -86,7 +86,7 @@ export function ListingForm({
         <p id="districts-hint" className="text-sm text-muted">{labels.districtsHint}</p>
         <div className="grid grid-cols-2 gap-2">
           {districts.map((d) => (
-            <label key={d.id} className="flex min-h-12 items-center gap-3 rounded-lg border-2 border-border px-3 has-[:checked]:border-brand has-[:checked]:bg-brand-soft">
+            <label key={d.id} className="flex min-h-12 items-center gap-3 rounded-xl border-[1.5px] border-border bg-surface px-3 has-[:checked]:border-brand has-[:checked]:bg-brand-soft">
               <input type="checkbox" name="districtIds" value={d.id} defaultChecked={defaults.districtIds.includes(d.id)} className="size-5 accent-brand" />
               <span className="text-sm">{d.name}</span>
             </label>
