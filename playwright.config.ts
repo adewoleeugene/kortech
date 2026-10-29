@@ -40,6 +40,7 @@ export default defineConfig({
       STORAGE_LOCAL_DIR: ".data/e2e-private",
       STORAGE_SIGNING_SECRET: "e2e-storage-secret",
       MEDIA_LOCAL_DIR: ".data/e2e-media",
+      WEATHER_PROVIDER: "mock",
     },
   },
 });

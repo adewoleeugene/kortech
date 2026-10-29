@@ -6,8 +6,8 @@ import { countDistricts } from "@/lib/reference";
 export const dynamic = "force-dynamic";
 
 const features: { key: TranslationKey; icon: string; href?: string }[] = [
-  { key: "home.featureAdvice", icon: "🌱" },
-  { key: "home.featureWeather", icon: "🌦️" },
+  { key: "home.featureAdvice", icon: "🌱", href: "/guides" },
+  { key: "home.featureWeather", icon: "🌦️", href: "/weather" },
   { key: "home.featureSuppliers", icon: "🧰", href: "/suppliers" },
   { key: "home.featureMarket", icon: "🧺" },
   { key: "home.featureFinance", icon: "🏦" },

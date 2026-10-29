@@ -3,7 +3,7 @@
 Digital agriculture platform for farmers, suppliers, buyers and lenders in Sierra Leone.
 The full product spec is in [PRD.md](PRD.md); it is built one milestone at a time (PRD Section 12).
 
-**Status:** Milestones 1–4 complete: foundation, authentication and profiles, business verification, supplier directory.
+**Status:** Milestones 1–5 complete: foundation, authentication and profiles, business verification, supplier directory, weather and crop guides.
 
 ## Stack
 
@@ -19,7 +19,7 @@ createdb smartfarm_dev
 createdb smartfarm_test
 npm install
 npm run db:migrate                # apply migrations to the dev database
-npm run db:seed                   # 16 districts, chiefdoms, crops, plus 4 sample suppliers (dev only)
+npm run db:seed                   # districts, chiefdoms, crops, draft crop guides; sample suppliers in dev
 npm run dev                       # http://localhost:3000
 ```
 
@@ -118,10 +118,37 @@ Documents are private:
 with the CPU slowed 4×. It fails if the page takes over 5 s to become usable or ships over 300 KB of JavaScript.
 Last run: usable in about 1.1 s, loaded in about 2.4 s, 136 KB of JavaScript.
 
+## Weather and crop guides (Milestone 5)
+
+**Weather** (`/weather?district=<slug>`, public; a signed-in farmer goes to their own district):
+
+- 7-day forecast from Open-Meteo (free, no key) through the `WeatherProvider` adapter (`lib/adapters/weather`).
+  Set `WEATHER_PROVIDER=mock` to work offline; tests always use the mock.
+- Cached per district for 3 hours in `WeatherCache`. If Open-Meteo is down, the last forecast is shown marked as out of date.
+- Farming tips come from rules in `config/weather-tips.ts`: heavy rain ≥ 20 mm/day, dry spell ≥ 5 days under 1 mm, heat ≥ 35 °C.
+  The wording is in `locales/en.json` (`weather.tip_*`).
+
+**Crop guides** (`/guides`, public; editor at `/admin/guides` for admins and agronomists):
+
+- 8 sections per crop. Farmers only see **published** sections; each shows "Reviewed by [name], [date]".
+- Saving a section clears its review and unpublishes it until someone publishes it again with **Mark reviewed and publish**.
+  Every edit, review and unpublish is written to `AuditLog`.
+- `prisma/data/guides.ts` holds **draft starter text** for all 9 priority crops (72 sections). It was not written by an
+  agronomist. The seed only adds sections that don't exist yet, so it never overwrites edits.
+  - Production: drafts are added **unpublished**. Farmers see nothing until an agronomist reviews each section.
+  - Development: drafts are shown, with a warning on every section: "Sample text… not yet reviewed".
+
+**Offline** (`public/sw.js`, production builds only):
+
+- Guides and weather pages are saved to the phone when opened, and shown from the saved copy when there's no connection.
+- Pages never opened before show a saved offline page. Private pages (`/farmer`, `/business`, `/admin`, `/login`) are never saved.
+- A banner shows while the phone is offline. Bump `VERSION` in `sw.js` when its caching rules change.
+
 ## Known gaps
 
 - Chiefdoms are a starter sample (3 per district), not the full official list of ~190. Complete them from the Statistics Sierra Leone list before launch.
 - Only local-disk storage exists. Production needs S3/R2 implementations for both private documents and public media before launch.
 - The mock SMS provider refuses to start in production. A real SMS provider is Milestone 8.
 - Old rate-limit rows are not cleaned up automatically yet; `pruneRateLimitHits()` exists for a scheduled job.
+- The crop guide drafts must be reviewed by an agronomist before launch (PRD 14).
 - The Western Area has no chiefdoms; its rural districts and Freetown areas are stored in the chiefdom table instead.

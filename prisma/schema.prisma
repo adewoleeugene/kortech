@@ -13,17 +13,18 @@ datasource db {
 // ---------- Reference data (Milestone 1) ----------
 
 model District {
-  id             String          @id @default(cuid())
-  name           String          @unique
-  slug           String          @unique
-  province       String
+  id               String            @id @default(cuid())
+  name             String            @unique
+  slug             String            @unique
+  province         String
   // Forecast point: the district headquarter town (see prisma/data/districts.ts).
-  latitude       Float
-  longitude      Float
-  chiefdoms      Chiefdom[]
+  latitude         Float
+  longitude        Float
+  chiefdoms        Chiefdom[]
   farmerProfiles   FarmerProfile[]
   organisations    Organisation[]
   supplierListings SupplierListing[]
+  weatherCache     WeatherCache?
 }
 
 model Chiefdom {
@@ -45,6 +46,7 @@ model Crop {
   group      String
   isPriority Boolean         @default(false)
   farmers    FarmerProfile[]
+  guides     CropGuide[]
 }
 
 // ---------- Accounts and auth (Milestone 2) ----------
@@ -64,19 +66,21 @@ enum FarmSizeUnit {
 }
 
 model User {
-  id            String         @id @default(cuid())
+  id             String         @id @default(cuid())
   // E.164, e.g. +23276123456
-  phone         String         @unique
-  name          String?
-  role          Role           @default(FARMER)
-  language      String         @default("en")
-  createdAt     DateTime       @default(now())
-  deletedAt     DateTime?
-  farmerProfile FarmerProfile?
-  sessions      Session[]
-  memberships   OrgMember[]
-  verifiedOrgs  Organisation[] @relation("VerifiedBy")
-  auditLogs     AuditLog[]
+  phone          String         @unique
+  name           String?
+  role           Role           @default(FARMER)
+  language       String         @default("en")
+  createdAt      DateTime       @default(now())
+  deletedAt      DateTime?
+  farmerProfile  FarmerProfile?
+  sessions       Session[]
+  memberships    OrgMember[]
+  verifiedOrgs   Organisation[] @relation("VerifiedBy")
+  auditLogs      AuditLog[]
+  reviewedGuides CropGuide[]    @relation("GuideReviewedBy")
+  editedGuides   CropGuide[]    @relation("GuideUpdatedBy")
 }
 
 model FarmerProfile {
@@ -162,27 +166,27 @@ enum OrgDocumentType {
 }
 
 model Organisation {
-  id                 String        @id @default(cuid())
+  id                 String            @id @default(cuid())
   type               OrgType
   legalName          String
   regNumber          String
   address            String
   districtId         String
-  district           District      @relation(fields: [districtId], references: [id])
+  district           District          @relation(fields: [districtId], references: [id])
   contactName        String
   phone              String
   email              String?
   // Agrochemical dealers need a licence (PRD 6.8).
-  sellsAgrochemicals Boolean       @default(false)
-  status             OrgStatus     @default(DRAFT)
+  sellsAgrochemicals Boolean           @default(false)
+  status             OrgStatus         @default(DRAFT)
   rejectionReason    String?
   submittedAt        DateTime?
   verifiedAt         DateTime?
   verifiedById       String?
-  verifiedBy         User?         @relation("VerifiedBy", fields: [verifiedById], references: [id])
-  plan               OrgPlan       @default(FREE)
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
+  verifiedBy         User?             @relation("VerifiedBy", fields: [verifiedById], references: [id])
+  plan               OrgPlan           @default(FREE)
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
   members            OrgMember[]
   documents          OrgDocument[]
   supplierListings   SupplierListing[]
@@ -276,4 +280,50 @@ model SupplierListing {
 
   @@index([category, status])
   @@index([orgId])
+}
+
+// ---------- Weather and crop guides (Milestone 5) ----------
+
+// One 7-day forecast per district, refreshed at most every 3 hours (PRD 6.4).
+model WeatherCache {
+  districtId String   @id
+  district   District @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  provider   String
+  forecast   Json
+  fetchedAt  DateTime
+}
+
+enum GuideSection {
+  OVERVIEW
+  PLANTING_CALENDAR
+  SOIL
+  FERTILISER
+  PESTS
+  DISEASES
+  HARVEST
+  STORAGE
+}
+
+// One section of a crop guide (PRD 6.3). Farmers only see published sections.
+// Editing a section clears its review and unpublishes it until it is reviewed again.
+model CropGuide {
+  id           String       @id @default(cuid())
+  cropId       String
+  crop         Crop         @relation(fields: [cropId], references: [id], onDelete: Cascade)
+  section      GuideSection
+  // Plain text: blank line between paragraphs, "- " for bullet points.
+  content      String
+  published    Boolean      @default(false)
+  // Starter text written for development, not by an agronomist. Always labelled.
+  isSample     Boolean      @default(false)
+  reviewedById String?
+  reviewedBy   User?        @relation("GuideReviewedBy", fields: [reviewedById], references: [id], onDelete: SetNull)
+  reviewedAt   DateTime?
+  updatedById  String?
+  updatedBy    User?        @relation("GuideUpdatedBy", fields: [updatedById], references: [id], onDelete: SetNull)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@unique([cropId, section])
+  @@index([published])
 }

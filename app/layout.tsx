@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { SiteFooter } from "@/components/site-footer";
+import { OfflineSupport } from "@/components/offline-support";
 import { SiteHeader } from "@/components/site-header";
 import { createTranslator, defaultLocale } from "@/lib/i18n";
 import { getTranslator } from "@/lib/i18n/server";
@@ -31,6 +32,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         >
           {t("nav.skipToContent")}
         </a>
+        <OfflineSupport bannerText={t("offline.banner")} />
         <SiteHeader t={t} />
         <main id="main" className="mx-auto w-full max-w-3xl flex-1 px-4 py-6">
           {children}

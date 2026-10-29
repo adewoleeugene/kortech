@@ -2,6 +2,7 @@ import { execSync } from "node:child_process";
 import { rmSync } from "node:fs";
 import { PrismaClient } from "@prisma/client";
 import { seedReferenceData } from "../../prisma/seed-reference";
+import { seedDraftGuides } from "../../prisma/seed-guides";
 import { seedSampleSuppliers } from "../../prisma/seed-samples";
 
 // Prepare the test database: latest schema, reference data, no leftover accounts or rate-limit hits.
@@ -15,6 +16,8 @@ export default async function globalSetup() {
   try {
     await seedReferenceData(db);
     await db.$transaction([
+      db.cropGuide.deleteMany(),
+      db.weatherCache.deleteMany(),
       db.supplierListing.deleteMany(),
       db.auditLog.deleteMany(),
       db.orgDocument.deleteMany(),
@@ -28,6 +31,8 @@ export default async function globalSetup() {
     ]);
     // A realistic directory for the browsing and 3G tests.
     await seedSampleSuppliers(db);
+    // Draft guides shown as labelled samples, like local development.
+    await seedDraftGuides(db, { publishAsSample: true });
   } finally {
     await db.$disconnect();
   }

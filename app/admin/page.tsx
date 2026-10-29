@@ -30,6 +30,10 @@ export default async function AdminHome() {
           </span>
         </Link>
       ) : null}
+      <Link href="/admin/guides" className="flex min-h-16 items-center gap-2 rounded-lg border-2 border-border px-4 py-3 font-semibold hover:border-brand">
+        <span aria-hidden>🌱</span>
+        {t("admin.guides")}
+      </Link>
       {canVerify ? (
         <Link href="/admin/listings" className="flex min-h-16 items-center gap-2 rounded-lg border-2 border-border px-4 py-3 font-semibold hover:border-brand">
           <span aria-hidden>🧰</span>

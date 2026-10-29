@@ -62,10 +62,10 @@ export async function makeApprovedSupplier(e164: string, legalName: string) {
   }
 }
 
-export async function setRole(e164: string, role: Role) {
+export async function setRole(e164: string, role: Role, name?: string) {
   const db = new PrismaClient({ datasourceUrl: process.env.TEST_DATABASE_URL });
   try {
-    await db.user.update({ where: { phone: e164 }, data: { role } });
+    await db.user.update({ where: { phone: e164 }, data: { role, ...(name ? { name } : {}) } });
   } finally {
     await db.$disconnect();
   }
