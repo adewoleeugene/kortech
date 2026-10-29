@@ -6,20 +6,94 @@
   },
   "nav": {
     "home": "Home",
-    "skipToContent": "Skip to main content"
+    "skipToContent": "Skip to main content",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "myDashboard": "My dashboard"
   },
   "home": {
     "title": "Grow more, sell better",
     "intro": "SmartFarm helps farmers in all 16 districts of Sierra Leone get advice, weather, inputs and buyers.",
     "farmerCta": "I am a farmer",
     "businessCta": "I run a business",
-    "comingSoon": "Sign-in opens soon.",
+    "businessSoon": "Business registration opens soon. You can sign in now with your phone number.",
     "featureAdvice": "Farming advice",
     "featureWeather": "Weather for your district",
     "featureSuppliers": "Verified suppliers",
     "featureMarket": "Sell your produce",
     "featureFinance": "Loans from partner lenders",
     "districtsServed": "Districts served: {count}"
+  },
+  "login": {
+    "title": "Sign in with your phone",
+    "intro": "We will send a 6-digit code by SMS. No email or password needed.",
+    "phoneLabel": "Phone number",
+    "phoneHint": "Sierra Leone number, for example 076 123 456",
+    "sendCode": "Send code",
+    "invalidPhone": "Enter a valid Sierra Leone phone number, for example 076 123 456.",
+    "rateLimited": "Too many codes requested. Please wait {minutes} minutes and try again.",
+    "verifyTitle": "Enter your code",
+    "verifyIntro": "We sent a 6-digit code to {phone}.",
+    "codeLabel": "6-digit code",
+    "verify": "Sign in",
+    "invalidCode": "That code is not correct. You have {count} tries left.",
+    "invalidCodeFormat": "Enter the 6 digits from the SMS.",
+    "expiredCode": "This code has expired or was replaced. Request a new code.",
+    "tooManyAttempts": "Too many wrong tries. Request a new code.",
+    "verifyRateLimited": "Too many tries from this connection. Please wait and try again later.",
+    "resend": "Send a new code",
+    "codeResent": "We sent you a new code.",
+    "changeNumber": "Use a different number",
+    "accountClosed": "This account has been closed."
+  },
+  "onboarding": {
+    "title": "Tell us about your farm",
+    "intro": "This helps us show advice and weather for your area. You can change it later.",
+    "nameLabel": "Your name",
+    "districtLabel": "District",
+    "districtPlaceholder": "Choose your district",
+    "chiefdomLabel": "Chiefdom (optional)",
+    "chiefdomPlaceholder": "Choose your chiefdom",
+    "chiefdomHint": "Pick a chiefdom in the district you chose.",
+    "cropsLabel": "Main crops",
+    "cropsHint": "Choose one or more.",
+    "farmSizeLabel": "Farm size (optional)",
+    "unitLabel": "Unit",
+    "unitAcre": "Acres",
+    "unitHectare": "Hectares",
+    "save": "Save and continue",
+    "errorName": "Enter your name (at least 2 letters).",
+    "errorDistrict": "Choose your district.",
+    "errorChiefdom": "That chiefdom is not in the district you chose.",
+    "errorCrops": "Choose at least one crop.",
+    "errorFarmSize": "Enter a farm size greater than 0, or leave it empty."
+  },
+  "farmer": {
+    "welcome": "Welcome, {name}",
+    "yourFarm": "Your farm",
+    "district": "District",
+    "chiefdom": "Chiefdom",
+    "crops": "Crops",
+    "farmSize": "Farm size",
+    "farmSizeValue": "{size} {unit}",
+    "notSet": "Not set",
+    "editProfile": "Edit farm details",
+    "comingSoon": "Coming soon",
+    "comingSoonIntro": "These services are being added to SmartFarm:"
+  },
+  "business": {
+    "title": "Business portal",
+    "intro": "Register your organisation and manage your listings here.",
+    "comingSoon": "Organisation registration opens soon."
+  },
+  "admin": {
+    "title": "Admin console",
+    "intro": "Verify businesses, moderate listings and review advice.",
+    "comingSoon": "The verification queue arrives in the next release."
+  },
+  "forbidden": {
+    "title": "You can't open this page",
+    "body": "Your account does not have access to this part of SmartFarm."
   },
   "errors": {
     "title": "Something went wrong",

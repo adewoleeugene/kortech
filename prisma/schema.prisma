@@ -10,32 +10,117 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// ---------- Reference data (Milestone 1) ----------
+
 model District {
-  id        String     @id @default(cuid())
-  name      String     @unique
-  slug      String     @unique
-  province  String
+  id             String          @id @default(cuid())
+  name           String          @unique
+  slug           String          @unique
+  province       String
   // Forecast point: the district headquarter town (see prisma/data/districts.ts).
-  latitude  Float
-  longitude Float
-  chiefdoms Chiefdom[]
+  latitude       Float
+  longitude      Float
+  chiefdoms      Chiefdom[]
+  farmerProfiles FarmerProfile[]
 }
 
 model Chiefdom {
-  id         String   @id @default(cuid())
-  name       String
-  districtId String
-  district   District @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  id             String          @id @default(cuid())
+  name           String
+  districtId     String
+  district       District        @relation(fields: [districtId], references: [id], onDelete: Cascade)
+  farmerProfiles FarmerProfile[]
 
   @@unique([districtId, name])
   @@index([districtId])
 }
 
 model Crop {
-  id         String  @id @default(cuid())
-  name       String  @unique
-  slug       String  @unique
+  id         String          @id @default(cuid())
+  name       String          @unique
+  slug       String          @unique
   // Groups crops for display, e.g. vegetables (pepper, okra, tomato).
   group      String
-  isPriority Boolean @default(false)
+  isPriority Boolean         @default(false)
+  farmers    FarmerProfile[]
+}
+
+// ---------- Accounts and auth (Milestone 2) ----------
+
+enum Role {
+  FARMER
+  SUPPLIER
+  BUYER
+  LENDER
+  ADMIN
+  AGRONOMIST
+}
+
+enum FarmSizeUnit {
+  ACRE
+  HECTARE
+}
+
+model User {
+  id            String         @id @default(cuid())
+  // E.164, e.g. +23276123456
+  phone         String         @unique
+  name          String?
+  role          Role           @default(FARMER)
+  language      String         @default("en")
+  createdAt     DateTime       @default(now())
+  deletedAt     DateTime?
+  farmerProfile FarmerProfile?
+  sessions      Session[]
+}
+
+model FarmerProfile {
+  userId       String       @id
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  districtId   String
+  district     District     @relation(fields: [districtId], references: [id])
+  chiefdomId   String?
+  chiefdom     Chiefdom?    @relation(fields: [chiefdomId], references: [id])
+  farmSize     Decimal?     @db.Decimal(10, 2)
+  farmSizeUnit FarmSizeUnit @default(ACRE)
+  crops        Crop[]
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  @@index([districtId])
+}
+
+// One-time sign-in codes. Only an HMAC of the code is stored, never the code.
+model OtpCode {
+  id         String    @id @default(cuid())
+  phone      String
+  codeHash   String
+  expiresAt  DateTime
+  attempts   Int       @default(0)
+  consumedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([phone, createdAt])
+}
+
+// Only a SHA-256 hash of the session token is stored; the token lives in an httpOnly cookie.
+model Session {
+  id         String   @id @default(cuid())
+  tokenHash  String   @unique
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt  DateTime
+  lastUsedAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  @@index([userId])
+}
+
+// Sliding-window rate limiting (auth now; AI and USSD later). One row per counted request.
+model RateLimitHit {
+  id        String   @id @default(cuid())
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
 }

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import type { TranslationKey } from "@/lib/i18n";
 import { getTranslator } from "@/lib/i18n/server";
 import { countDistricts } from "@/lib/reference";
@@ -23,14 +24,19 @@ export default async function HomePage() {
       </section>
 
       <section className="grid gap-3 sm:grid-cols-2">
-        {/* Sign-in arrives in Milestone 2; these are placeholders for the two entry points. */}
-        <span className="flex min-h-14 items-center justify-center rounded-lg bg-brand px-4 text-lg font-semibold text-brand-foreground">
+        <Link
+          href="/login"
+          className="flex min-h-14 items-center justify-center rounded-lg bg-brand px-4 text-lg font-semibold text-brand-foreground"
+        >
           {t("home.farmerCta")}
-        </span>
-        <span className="flex min-h-14 items-center justify-center rounded-lg border-2 border-brand px-4 text-lg font-semibold text-brand">
+        </Link>
+        <Link
+          href="/login?next=/business"
+          className="flex min-h-14 items-center justify-center rounded-lg border-2 border-brand px-4 text-lg font-semibold text-brand"
+        >
           {t("home.businessCta")}
-        </span>
-        <p className="text-sm text-muted sm:col-span-2">{t("home.comingSoon")}</p>
+        </Link>
+        <p className="text-sm text-muted sm:col-span-2">{t("home.businessSoon")}</p>
       </section>
 
       <section>

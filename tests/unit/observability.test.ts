@@ -9,7 +9,7 @@ import {
 import { logger, setLogSink } from "@/lib/observability/logger";
 
 afterEach(() => {
-  setLogSink(null);
+  setLogSink(() => {});
   setErrorTracker(new ConsoleErrorTracker());
 });
 

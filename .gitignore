@@ -42,3 +42,11 @@ next-env.d.ts
 
 # keep the env template in git
 !.env.example
+
+# local data (mock SMS outbox, uploads)
+/.data/
+# playwright
+/test-results/
+/playwright-report/
+/.next-e2e/
+/.next-build/
