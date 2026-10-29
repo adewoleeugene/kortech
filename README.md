@@ -3,7 +3,7 @@
 Digital agriculture platform for farmers, suppliers, buyers and lenders in Sierra Leone.
 The full product spec is in [PRD.md](PRD.md); it is built one milestone at a time (PRD Section 12).
 
-**Status:** Milestones 1 (foundation) and 2 (authentication and profiles) complete.
+**Status:** Milestones 1–3 complete: foundation, authentication and profiles, business registration and verification.
 
 ## Stack
 
@@ -14,7 +14,7 @@ Next.js 15 (App Router) · TypeScript (strict) · Tailwind CSS 4 · PostgreSQL �
 Requires Node 20+ and PostgreSQL running locally.
 
 ```bash
-cp .env.example .env              # set USER in both database URLs and OTP_SECRET (openssl rand -hex 32)
+cp .env.example .env              # set USER in the database URLs, OTP_SECRET and STORAGE_SIGNING_SECRET (openssl rand -hex 32)
 createdb smartfarm_dev
 createdb smartfarm_test
 npm install
@@ -83,9 +83,29 @@ How it works:
 Access is checked on the server in each area's layout and again in each page and server action.
 `middleware.ts` only redirects visitors with no session cookie to `/login`.
 
+## Business registration and verification (Milestone 3)
+
+- On the home page, **I run a business** → sign in with a new number → register the organisation (supplier, buyer or lender).
+- The account's role becomes the organisation type. A number that has finished farmer onboarding can't register a business.
+- Upload documents (PDF, JPG or PNG, max 5 MB, checked by file content), then **Submit for verification**.
+  - Everyone: business registration certificate.
+  - Lenders, and suppliers that sell agrochemicals: also a licence.
+- Status flow: `DRAFT → PENDING → APPROVED | REJECTED`. Rejected organisations can edit and resubmit.
+- Admins review at `/admin/organisations`: see details, open documents, approve, or reject with a reason (10+ characters).
+  Agronomists can open `/admin` but not the verification queue.
+- Each submission and decision is written to `AuditLog`. The business gets an SMS on approval or rejection (mock SMS for now).
+- `requireApprovedOrganisation()` in `lib/business/organisation.ts` is the gate every listing write must call (Milestone 4 onwards).
+
+Documents are private:
+
+- Stored outside `/public` through the `PrivateFileStorage` adapter (`lib/adapters/storage`); local disk under `.data/private` in development.
+- Only served by `/api/documents/[id]`, which needs **both** a signed link that expires after 5 minutes **and** a signed-in admin.
+  Signed-out visitors get 401; everyone else, and expired or tampered links, get 403.
+
 ## Known gaps
 
 - Chiefdoms are a starter sample (3 per district), not the full official list of ~190. Complete them from the Statistics Sierra Leone list before launch.
+- Only local-disk storage exists. Production needs an S3/R2 `PrivateFileStorage` implementation before launch.
 - The mock SMS provider refuses to start in production. A real SMS provider is Milestone 8.
 - Old rate-limit rows are not cleaned up automatically yet; `pruneRateLimitHits()` exists for a scheduled job.
 - The Western Area has no chiefdoms; its rural districts and Freetown areas are stored in the chiefdom table instead.

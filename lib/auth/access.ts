@@ -14,6 +14,16 @@ export function canAccess(role: Role, area: Area): boolean {
   return AREA_ROLES[area].includes(role);
 }
 
+// Business verification is for admins only; agronomists review advice content.
+export function canVerifyOrganisations(role: Role): boolean {
+  return role === "ADMIN";
+}
+
+// A new account that has not finished farmer onboarding may register a business instead.
+export function canRegisterBusiness(role: Role, hasFarmerProfile: boolean): boolean {
+  return canAccess(role, "business") || (role === "FARMER" && !hasFarmerProfile);
+}
+
 // Where a user lands after signing in.
 export function homePathForRole(role: Role): string {
   if (canAccess(role, "admin")) return "/admin";

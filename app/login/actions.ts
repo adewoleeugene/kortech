@@ -87,7 +87,8 @@ export async function verifyOtpAction(_prev: FormState, formData: FormData): Pro
 
   if (user.role === "FARMER") {
     const hasProfile = await db.farmerProfile.count({ where: { userId: user.id } });
-    if (!hasProfile) redirect("/onboarding");
+    // New accounts choose: farmer onboarding, or business registration if they came from "I run a business".
+    if (!hasProfile) redirect(safeNextPath(parsed.data?.next) === "/register-business" ? "/register-business" : "/onboarding");
   }
   redirect(safeNextPath(parsed.data?.next) ?? homePathForRole(user.role));
 }

@@ -25,6 +25,7 @@ export default defineConfig(({ mode }) => {
         OTP_SECRET: "test-otp-secret",
         SMS_PROVIDER: "mock",
         SMS_OUTBOX_FILE: "",
+        STORAGE_SIGNING_SECRET: "test-storage-secret",
       },
     },
   };

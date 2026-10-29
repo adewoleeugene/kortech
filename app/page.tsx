@@ -31,12 +31,12 @@ export default async function HomePage() {
           {t("home.farmerCta")}
         </Link>
         <Link
-          href="/login?next=/business"
+          href="/login?next=/register-business"
           className="flex min-h-14 items-center justify-center rounded-lg border-2 border-brand px-4 text-lg font-semibold text-brand"
         >
           {t("home.businessCta")}
         </Link>
-        <p className="text-sm text-muted sm:col-span-2">{t("home.businessSoon")}</p>
+        <p className="text-sm text-muted sm:col-span-2">{t("home.businessHint")}</p>
       </section>
 
       <section>

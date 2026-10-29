@@ -33,6 +33,9 @@ export default defineConfig({
       OTP_SECRET: "e2e-otp-secret",
       SMS_PROVIDER: "mock",
       SMS_OUTBOX_FILE,
+      STORAGE_DRIVER: "local",
+      STORAGE_LOCAL_DIR: ".data/e2e-private",
+      STORAGE_SIGNING_SECRET: "e2e-storage-secret",
     },
   },
 });

@@ -1,6 +1,6 @@
 import type { Role } from "@prisma/client";
 import { describe, expect, it } from "vitest";
-import { type Area, canAccess, homePathForRole, safeNextPath } from "@/lib/auth/access";
+import { type Area, canAccess, canRegisterBusiness, canVerifyOrganisations, homePathForRole, safeNextPath } from "@/lib/auth/access";
 
 const matrix: [Role, Record<Area, boolean>][] = [
   ["FARMER", { farmer: true, business: false, admin: false }],
@@ -44,4 +44,26 @@ describe("safeNextPath", () => {
       expect(safeNextPath(value)).toBeNull();
     },
   );
+});
+
+describe("canVerifyOrganisations", () => {
+  it("is for admins only, not agronomists", () => {
+    expect(canVerifyOrganisations("ADMIN")).toBe(true);
+    expect(canVerifyOrganisations("AGRONOMIST")).toBe(false);
+    expect(canVerifyOrganisations("SUPPLIER")).toBe(false);
+  });
+});
+
+describe("canRegisterBusiness", () => {
+  it("allows business accounts and new accounts that have not onboarded as farmers", () => {
+    expect(canRegisterBusiness("FARMER", false)).toBe(true);
+    expect(canRegisterBusiness("SUPPLIER", false)).toBe(true);
+    expect(canRegisterBusiness("LENDER", false)).toBe(true);
+  });
+
+  it("refuses onboarded farmers and staff accounts", () => {
+    expect(canRegisterBusiness("FARMER", true)).toBe(false);
+    expect(canRegisterBusiness("ADMIN", false)).toBe(false);
+    expect(canRegisterBusiness("AGRONOMIST", false)).toBe(false);
+  });
 });

@@ -3,7 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 // Cheap first gate: no session cookie on a protected area -> sign in.
 // The real check (valid session + role) happens on the server in each area's
 // layout and in every action, because middleware can't see the database.
-const PROTECTED = ["/farmer", "/business", "/admin", "/onboarding"];
+const PROTECTED = ["/farmer", "/business", "/admin", "/onboarding", "/register-business"];
 const SESSION_COOKIE = "sf_session";
 const SESSION_MAX_AGE = 30 * 24 * 60 * 60;
 

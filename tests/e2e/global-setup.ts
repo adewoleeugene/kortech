@@ -14,6 +14,10 @@ export default async function globalSetup() {
   try {
     await seedReferenceData(db);
     await db.$transaction([
+      db.auditLog.deleteMany(),
+      db.orgDocument.deleteMany(),
+      db.orgMember.deleteMany(),
+      db.organisation.deleteMany(),
       db.session.deleteMany(),
       db.farmerProfile.deleteMany(),
       db.user.deleteMany(),

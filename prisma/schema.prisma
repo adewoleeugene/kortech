@@ -22,6 +22,7 @@ model District {
   longitude      Float
   chiefdoms      Chiefdom[]
   farmerProfiles FarmerProfile[]
+  organisations  Organisation[]
 }
 
 model Chiefdom {
@@ -72,6 +73,9 @@ model User {
   deletedAt     DateTime?
   farmerProfile FarmerProfile?
   sessions      Session[]
+  memberships   OrgMember[]
+  verifiedOrgs  Organisation[] @relation("VerifiedBy")
+  auditLogs     AuditLog[]
 }
 
 model FarmerProfile {
@@ -123,4 +127,105 @@ model RateLimitHit {
   createdAt DateTime @default(now())
 
   @@index([key, createdAt])
+}
+
+// ---------- Organisations and verification (Milestone 3) ----------
+
+enum OrgType {
+  SUPPLIER
+  BUYER
+  LENDER
+}
+
+enum OrgStatus {
+  DRAFT
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+// Reserved for future subscriptions (PRD 10). Nothing is billed yet.
+enum OrgPlan {
+  FREE
+  PRO
+}
+
+enum OrgMemberRole {
+  OWNER
+  STAFF
+}
+
+enum OrgDocumentType {
+  REGISTRATION_CERTIFICATE
+  LICENCE
+}
+
+model Organisation {
+  id                 String        @id @default(cuid())
+  type               OrgType
+  legalName          String
+  regNumber          String
+  address            String
+  districtId         String
+  district           District      @relation(fields: [districtId], references: [id])
+  contactName        String
+  phone              String
+  email              String?
+  // Agrochemical dealers need a licence (PRD 6.8).
+  sellsAgrochemicals Boolean       @default(false)
+  status             OrgStatus     @default(DRAFT)
+  rejectionReason    String?
+  submittedAt        DateTime?
+  verifiedAt         DateTime?
+  verifiedById       String?
+  verifiedBy         User?         @relation("VerifiedBy", fields: [verifiedById], references: [id])
+  plan               OrgPlan       @default(FREE)
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  members            OrgMember[]
+  documents          OrgDocument[]
+
+  @@index([status, submittedAt])
+}
+
+model OrgMember {
+  orgId     String
+  org       Organisation  @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  // One organisation per user account.
+  userId    String        @unique
+  user      User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role      OrgMemberRole @default(OWNER)
+  createdAt DateTime      @default(now())
+
+  @@id([orgId, userId])
+}
+
+// Files live in private storage (lib/adapters/storage), never under /public.
+model OrgDocument {
+  id          String          @id @default(cuid())
+  orgId       String
+  org         Organisation    @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  type        OrgDocumentType
+  fileKey     String          @unique
+  fileName    String
+  contentType String
+  sizeBytes   Int
+  uploadedAt  DateTime        @default(now())
+
+  @@unique([orgId, type])
+}
+
+// Who did what, when (PRD 6.9). Written for every admin action.
+model AuditLog {
+  id        String   @id @default(cuid())
+  actorId   String?
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action    String
+  entity    String
+  entityId  String
+  metadata  Json     @default("{}")
+  createdAt DateTime @default(now())
+
+  @@index([entity, entityId])
+  @@index([actorId, createdAt])
 }

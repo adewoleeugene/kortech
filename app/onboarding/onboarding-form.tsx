@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
+import { FieldError } from "@/components/field-error";
 import { SubmitButton } from "@/components/submit-button";
 import { type OnboardingState, saveProfileAction } from "./actions";
 
@@ -23,15 +24,6 @@ export type OnboardingLabels = Record<
 >;
 
 const inputClass = "min-h-12 w-full rounded-lg border-2 border-border bg-background px-4 text-lg";
-
-function FieldError({ id, message }: { id: string; message?: string }) {
-  if (!message) return null;
-  return (
-    <p id={id} role="alert" className="text-sm font-semibold text-red-700 dark:text-red-300">
-      {message}
-    </p>
-  );
-}
 
 export function OnboardingForm({
   districts,
