@@ -44,7 +44,12 @@ export default async function BusinessHome() {
         <p className="text-xl font-bold" data-testid="org-status">{t(`business.status${org.status}`)}</p>
         {org.status === "DRAFT" && <p>{t("business.draftHelp")}</p>}
         {org.status === "PENDING" && <p>{t("business.pendingHelp")}</p>}
-        {org.status === "APPROVED" && <p>{t("business.approvedHelp")}</p>}
+        {org.status === "APPROVED" && org.type === "SUPPLIER" && (
+          <Link href="/business/listings" className="inline-flex min-h-12 items-center rounded-lg bg-brand px-5 font-semibold text-brand-foreground">
+            {t("listings.manage")}
+          </Link>
+        )}
+        {org.status === "APPROVED" && org.type !== "SUPPLIER" && <p>{t("business.approvedHelp")}</p>}
         {org.status === "REJECTED" && (
           <>
             <p>{t("business.rejectedHelp")}</p>

@@ -2,6 +2,7 @@ import { execSync } from "node:child_process";
 import { rmSync } from "node:fs";
 import { PrismaClient } from "@prisma/client";
 import { seedReferenceData } from "../../prisma/seed-reference";
+import { seedSampleSuppliers } from "../../prisma/seed-samples";
 
 // Prepare the test database: latest schema, reference data, no leftover accounts or rate-limit hits.
 export default async function globalSetup() {
@@ -14,6 +15,7 @@ export default async function globalSetup() {
   try {
     await seedReferenceData(db);
     await db.$transaction([
+      db.supplierListing.deleteMany(),
       db.auditLog.deleteMany(),
       db.orgDocument.deleteMany(),
       db.orgMember.deleteMany(),
@@ -24,6 +26,8 @@ export default async function globalSetup() {
       db.otpCode.deleteMany(),
       db.rateLimitHit.deleteMany(),
     ]);
+    // A realistic directory for the browsing and 3G tests.
+    await seedSampleSuppliers(db);
   } finally {
     await db.$disconnect();
   }

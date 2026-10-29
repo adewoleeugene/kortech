@@ -23,19 +23,23 @@ export default defineConfig({
   // Low-end Android phone viewport (PRD 7).
   projects: [{ name: "mobile-chrome", use: { ...devices["Pixel 5"] } }],
   webServer: {
-    command: `npx next dev --turbopack -p ${PORT}`,
+    // Production build, so page weight and 3G timings match what farmers get.
+    command: `npx next build && npx next start -p ${PORT}`,
     url: `http://localhost:${PORT}/api/health`,
     reuseExistingServer: !process.env.CI,
-    timeout: 120_000,
+    timeout: 300_000,
     env: {
       DATABASE_URL: testDatabaseUrl,
       NEXT_DIST_DIR: ".next-e2e",
       OTP_SECRET: "e2e-otp-secret",
       SMS_PROVIDER: "mock",
+      // The mock SMS provider is refused in production unless explicitly allowed (test server only).
+      ALLOW_MOCK_SMS: "true",
       SMS_OUTBOX_FILE,
       STORAGE_DRIVER: "local",
       STORAGE_LOCAL_DIR: ".data/e2e-private",
       STORAGE_SIGNING_SECRET: "e2e-storage-secret",
+      MEDIA_LOCAL_DIR: ".data/e2e-media",
     },
   },
 });

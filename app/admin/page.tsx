@@ -29,6 +29,12 @@ export default async function AdminHome() {
             {t("admin.pendingCount", { count: pending })}
           </span>
         </Link>
+      ) : null}
+      {canVerify ? (
+        <Link href="/admin/listings" className="flex min-h-16 items-center gap-2 rounded-lg border-2 border-border px-4 py-3 font-semibold hover:border-brand">
+          <span aria-hidden>🧰</span>
+          {t("admin.listings")}
+        </Link>
       ) : (
         <p className="rounded-lg bg-surface px-4 py-3">{t("admin.verifierOnly")}</p>
       )}

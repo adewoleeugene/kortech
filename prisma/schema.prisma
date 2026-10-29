@@ -21,8 +21,9 @@ model District {
   latitude       Float
   longitude      Float
   chiefdoms      Chiefdom[]
-  farmerProfiles FarmerProfile[]
-  organisations  Organisation[]
+  farmerProfiles   FarmerProfile[]
+  organisations    Organisation[]
+  supplierListings SupplierListing[]
 }
 
 model Chiefdom {
@@ -184,6 +185,7 @@ model Organisation {
   updatedAt          DateTime      @updatedAt
   members            OrgMember[]
   documents          OrgDocument[]
+  supplierListings   SupplierListing[]
 
   @@index([status, submittedAt])
 }
@@ -228,4 +230,50 @@ model AuditLog {
 
   @@index([entity, entityId])
   @@index([actorId, createdAt])
+}
+
+// ---------- Supplier directory (Milestone 4) ----------
+
+enum SupplierCategory {
+  SEEDS
+  FERTILISER
+  AGROCHEMICALS
+  TOOLS
+  MACHINERY
+  EQUIPMENT_HIRE
+  OTHER
+}
+
+enum ListingStatus {
+  ACTIVE
+  // Turned off by the supplier.
+  INACTIVE
+  // Removed from public view by an admin (PRD 5, A2).
+  HIDDEN
+}
+
+model SupplierListing {
+  id             String           @id @default(cuid())
+  orgId          String
+  org            Organisation     @relation(fields: [orgId], references: [id], onDelete: Cascade)
+  category       SupplierCategory
+  title          String
+  description    String
+  // Leones in minor units (1 SLE = 100). Null means "ask for price".
+  priceMinor     Int?
+  unit           String?
+  // Districts the supplier serves or delivers to.
+  districts      District[]
+  // Keys in public media storage (lib/adapters/storage), at most 3.
+  photos         String[]
+  contactPhone   String
+  whatsappNumber String?
+  // Paid placement later (PRD 10). Set by admins only, always labelled.
+  isSponsored    Boolean          @default(false)
+  status         ListingStatus    @default(ACTIVE)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([category, status])
+  @@index([orgId])
 }

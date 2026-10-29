@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 // Clears account data in the test database (reference data stays).
 export async function clearAccountData() {
   await db.$transaction([
+    db.supplierListing.deleteMany(),
     db.auditLog.deleteMany(),
     db.orgDocument.deleteMany(),
     db.orgMember.deleteMany(),

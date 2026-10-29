@@ -85,3 +85,19 @@ export function getPrivateStorage(): PrivateFileStorage {
 export function setPrivateStorage(next: PrivateFileStorage | null) {
   storage = next;
 }
+
+// Public media (listing photos). Same interface, separate store: nothing private ever goes here.
+// Served by app/media/[...key]/route.ts.
+let mediaStorage: PrivateFileStorage | null = null;
+
+export function getPublicMediaStorage(): PrivateFileStorage {
+  if (mediaStorage) return mediaStorage;
+  const driver = process.env.STORAGE_DRIVER ?? "local";
+  if (driver !== "local") throw new Error(`Unknown STORAGE_DRIVER "${driver}"`);
+  mediaStorage = new LocalDiskStorage(process.env.MEDIA_LOCAL_DIR || ".data/media");
+  return mediaStorage;
+}
+
+export function setPublicMediaStorage(next: PrivateFileStorage | null) {
+  mediaStorage = next;
+}

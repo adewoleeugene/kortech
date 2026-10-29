@@ -5,10 +5,10 @@ import { countDistricts } from "@/lib/reference";
 
 export const dynamic = "force-dynamic";
 
-const features: { key: TranslationKey; icon: string }[] = [
+const features: { key: TranslationKey; icon: string; href?: string }[] = [
   { key: "home.featureAdvice", icon: "🌱" },
   { key: "home.featureWeather", icon: "🌦️" },
-  { key: "home.featureSuppliers", icon: "🧰" },
+  { key: "home.featureSuppliers", icon: "🧰", href: "/suppliers" },
   { key: "home.featureMarket", icon: "🧺" },
   { key: "home.featureFinance", icon: "🏦" },
 ];
@@ -42,9 +42,18 @@ export default async function HomePage() {
       <section>
         <ul className="divide-y divide-border rounded-lg border border-border">
           {features.map((f) => (
-            <li key={f.key} className="flex min-h-14 items-center gap-3 px-4">
-              <span aria-hidden className="text-2xl">{f.icon}</span>
-              <span>{t(f.key)}</span>
+            <li key={f.key}>
+              {f.href ? (
+                <Link href={f.href} className="flex min-h-14 items-center gap-3 px-4 font-semibold text-brand">
+                  <span aria-hidden className="text-2xl">{f.icon}</span>
+                  <span>{t(f.key)} →</span>
+                </Link>
+              ) : (
+                <span className="flex min-h-14 items-center gap-3 px-4">
+                  <span aria-hidden className="text-2xl">{f.icon}</span>
+                  <span>{t(f.key)}</span>
+                </span>
+              )}
             </li>
           ))}
         </ul>

@@ -37,6 +37,31 @@ export async function signInWithPhone(page: Page, phone: { local: string; e164: 
   await expect(page).not.toHaveURL(/\/login/);
 }
 
+// Gives a signed-in account an approved supplier organisation (skips the verification flow).
+export async function makeApprovedSupplier(e164: string, legalName: string) {
+  const db = new PrismaClient({ datasourceUrl: process.env.TEST_DATABASE_URL });
+  try {
+    const user = await db.user.update({ where: { phone: e164 }, data: { role: "SUPPLIER" } });
+    const district = await db.district.findUniqueOrThrow({ where: { slug: "kenema" } });
+    await db.organisation.create({
+      data: {
+        type: "SUPPLIER",
+        legalName,
+        regNumber: "E2E-1",
+        address: "Hangha Road, Kenema",
+        districtId: district.id,
+        contactName: "E2E Supplier",
+        phone: e164,
+        status: "APPROVED",
+        verifiedAt: new Date(),
+        members: { create: { userId: user.id } },
+      },
+    });
+  } finally {
+    await db.$disconnect();
+  }
+}
+
 export async function setRole(e164: string, role: Role) {
   const db = new PrismaClient({ datasourceUrl: process.env.TEST_DATABASE_URL });
   try {

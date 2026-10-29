@@ -10,7 +10,6 @@ export const metadata: Metadata = { title: "My farm" };
 const upcoming: { key: TranslationKey; icon: string }[] = [
   { key: "home.featureAdvice", icon: "🌱" },
   { key: "home.featureWeather", icon: "🌦️" },
-  { key: "home.featureSuppliers", icon: "🧰" },
   { key: "home.featureMarket", icon: "🧺" },
   { key: "home.featureFinance", icon: "🏦" },
 ];
@@ -47,6 +46,14 @@ export default async function FarmerDashboard() {
           {t("farmer.editProfile")}
         </Link>
       </section>
+
+      <Link href="/suppliers" className="flex min-h-16 items-center gap-3 rounded-lg border-2 border-brand px-4 py-3">
+        <span aria-hidden className="text-2xl">🧰</span>
+        <span>
+          <span className="block font-semibold">{t("farmer.findSuppliers")}</span>
+          <span className="block text-sm text-muted">{t("farmer.findSuppliersHint")}</span>
+        </span>
+      </Link>
 
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">{t("farmer.comingSoon")}</h2>

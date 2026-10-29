@@ -3,7 +3,7 @@
 Digital agriculture platform for farmers, suppliers, buyers and lenders in Sierra Leone.
 The full product spec is in [PRD.md](PRD.md); it is built one milestone at a time (PRD Section 12).
 
-**Status:** Milestones 1–3 complete: foundation, authentication and profiles, business registration and verification.
+**Status:** Milestones 1–4 complete: foundation, authentication and profiles, business verification, supplier directory.
 
 ## Stack
 
@@ -19,7 +19,7 @@ createdb smartfarm_dev
 createdb smartfarm_test
 npm install
 npm run db:migrate                # apply migrations to the dev database
-npm run db:seed                   # 16 districts, sample chiefdoms, priority crops
+npm run db:seed                   # 16 districts, chiefdoms, crops, plus 4 sample suppliers (dev only)
 npm run dev                       # http://localhost:3000
 ```
 
@@ -32,7 +32,7 @@ npm run dev                       # http://localhost:3000
 | `npm run lint` | ESLint |
 | `npm run typecheck` | TypeScript, no emit |
 | `npm test` | Vitest unit and integration tests (uses `TEST_DATABASE_URL`) |
-| `npm run test:e2e` | Playwright browser tests (starts its own server on port 3100 against the test database) |
+| `npm run test:e2e` | Playwright browser tests: builds and starts a production server on port 3100 against the test database |
 | `npm run check` | Lint + type-check + tests |
 | `npm run db:migrate` | Create/apply migrations (dev database) |
 | `npm run db:seed` | Load reference data (idempotent) |
@@ -102,10 +102,26 @@ Documents are private:
 - Only served by `/api/documents/[id]`, which needs **both** a signed link that expires after 5 minutes **and** a signed-in admin.
   Signed-out visitors get 401; everyone else, and expired or tampered links, get 403.
 
+## Supplier directory (Milestone 4)
+
+- `/suppliers` is public: search by keyword, category and district. A signed-in farmer starts on their own district.
+- Only **active** listings from **approved** suppliers are ever shown. Sponsored listings come first and are always labelled.
+- Each listing has Call (`tel:`) and WhatsApp (`wa.me`) buttons: plain links that work without JavaScript.
+- Approved suppliers manage listings at `/business/listings`: create, edit, turn off/on, up to 3 photos (JPG/PNG, 2 MB).
+  Only suppliers verified with an agrochemical dealer licence can list agrochemicals.
+- Prices are stored in minor units (SLE 1 = 100), parsed and formatted in `lib/money.ts`.
+- Admins moderate at `/admin/listings`: hide/restore and mark Sponsored, each written to `AuditLog`.
+- Photos go to public media storage (`.data/media` locally), are served at `/media/...`, and are resized and served as WebP by `next/image`.
+- Sample suppliers (`prisma/seed-samples.ts`) use made-up businesses on `+23279900xxx` numbers and are never seeded in production.
+
+**3G check:** `tests/e2e/suppliers.spec.ts` loads the directory on a throttled connection (300 ms latency, 750 kbps)
+with the CPU slowed 4×. It fails if the page takes over 5 s to become usable or ships over 300 KB of JavaScript.
+Last run: usable in about 1.1 s, loaded in about 2.4 s, 136 KB of JavaScript.
+
 ## Known gaps
 
 - Chiefdoms are a starter sample (3 per district), not the full official list of ~190. Complete them from the Statistics Sierra Leone list before launch.
-- Only local-disk storage exists. Production needs an S3/R2 `PrivateFileStorage` implementation before launch.
+- Only local-disk storage exists. Production needs S3/R2 implementations for both private documents and public media before launch.
 - The mock SMS provider refuses to start in production. A real SMS provider is Milestone 8.
 - Old rate-limit rows are not cleaned up automatically yet; `pruneRateLimitHits()` exists for a scheduled job.
 - The Western Area has no chiefdoms; its rural districts and Freetown areas are stored in the chiefdom table instead.
