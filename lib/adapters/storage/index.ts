@@ -1,9 +1,10 @@
 import { mkdir, readFile, rm, writeFile } from "node:fs/promises";
 import { dirname, join, resolve, sep } from "node:path";
+import { del, get, put } from "@vercel/blob";
 
 // Private file storage (PRD 6.8, 7). Nothing stored here is ever served directly;
-// files are read through an authorised route only. An S3/R2 implementation can
-// replace LocalDiskStorage behind this interface.
+// files are read through an authorised route only. STORAGE_DRIVER picks local disk
+// (dev) or Vercel Blob (production, a private store).
 export interface PrivateFileStorage {
   put(key: string, bytes: Uint8Array, contentType: string): Promise<void>;
   get(key: string): Promise<{ bytes: Uint8Array; contentType: string } | null>;
@@ -54,6 +55,41 @@ export class LocalDiskStorage implements PrivateFileStorage {
   }
 }
 
+// Vercel Blob, private store (needs BLOB_READ_WRITE_TOKEN). Each store gets its own prefix.
+export class VercelBlobStorage implements PrivateFileStorage {
+  constructor(private readonly prefix: string) {}
+
+  async put(key: string, bytes: Uint8Array, contentType: string) {
+    assertSafeKey(key);
+    await put(`${this.prefix}/${key}`, Buffer.from(bytes), {
+      access: "private",
+      contentType,
+      addRandomSuffix: false,
+      allowOverwrite: true,
+    });
+  }
+
+  async get(key: string) {
+    assertSafeKey(key);
+    const result = await get(`${this.prefix}/${key}`, { access: "private" });
+    if (!result || result.statusCode !== 200) return null;
+    const bytes = new Uint8Array(await new Response(result.stream).arrayBuffer());
+    return { bytes, contentType: result.blob.contentType ?? "application/octet-stream" };
+  }
+
+  async delete(key: string) {
+    assertSafeKey(key);
+    await del(`${this.prefix}/${key}`);
+  }
+}
+
+function createStorage(localDir: string, blobPrefix: string): PrivateFileStorage {
+  const driver = process.env.STORAGE_DRIVER ?? "local";
+  if (driver === "blob") return new VercelBlobStorage(blobPrefix);
+  if (driver !== "local") throw new Error(`Unknown STORAGE_DRIVER "${driver}"`);
+  return new LocalDiskStorage(localDir);
+}
+
 // In-memory storage for tests.
 export class MemoryStorage implements PrivateFileStorage {
   readonly files = new Map<string, { bytes: Uint8Array; contentType: string }>();
@@ -76,9 +112,7 @@ let storage: PrivateFileStorage | null = null;
 
 export function getPrivateStorage(): PrivateFileStorage {
   if (storage) return storage;
-  const driver = process.env.STORAGE_DRIVER ?? "local";
-  if (driver !== "local") throw new Error(`Unknown STORAGE_DRIVER "${driver}"`);
-  storage = new LocalDiskStorage(process.env.STORAGE_LOCAL_DIR || ".data/private");
+  storage = createStorage(process.env.STORAGE_LOCAL_DIR || ".data/private", "private");
   return storage;
 }
 
@@ -92,9 +126,7 @@ let mediaStorage: PrivateFileStorage | null = null;
 
 export function getPublicMediaStorage(): PrivateFileStorage {
   if (mediaStorage) return mediaStorage;
-  const driver = process.env.STORAGE_DRIVER ?? "local";
-  if (driver !== "local") throw new Error(`Unknown STORAGE_DRIVER "${driver}"`);
-  mediaStorage = new LocalDiskStorage(process.env.MEDIA_LOCAL_DIR || ".data/media");
+  mediaStorage = createStorage(process.env.MEDIA_LOCAL_DIR || ".data/media", "media");
   return mediaStorage;
 }
 

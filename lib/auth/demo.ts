@@ -86,6 +86,8 @@ export async function ensureDemoAccount(key: DemoAccountKey): Promise<User> {
         },
       });
     }
+    // The ready-to-use farmer skips photo evidence; "New farmer sign-up" shows that step.
+    await db.farmerProfile.update({ where: { userId: user.id }, data: { verificationStatus: "APPROVED", verifiedAt: new Date() } });
   }
 
   if (account.org) {

@@ -86,19 +86,54 @@ model User {
 }
 
 model FarmerProfile {
-  userId       String       @id
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  districtId   String
-  district     District     @relation(fields: [districtId], references: [id])
-  chiefdomId   String?
-  chiefdom     Chiefdom?    @relation(fields: [chiefdomId], references: [id])
-  farmSize     Decimal?     @db.Decimal(10, 2)
-  farmSizeUnit FarmSizeUnit @default(ACRE)
-  crops        Crop[]
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  userId                  String                   @id
+  user                    User                     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  districtId              String
+  district                District                 @relation(fields: [districtId], references: [id])
+  chiefdomId              String?
+  chiefdom                Chiefdom?                @relation(fields: [chiefdomId], references: [id])
+  farmSize                Decimal?                 @db.Decimal(10, 2)
+  farmSizeUnit            FarmSizeUnit             @default(ACRE)
+  crops                   Crop[]
+  createdAt               DateTime                 @default(now())
+  updatedAt               DateTime                 @updatedAt
+  // Photo evidence (farm, ID card, selfie) reviewed by an admin.
+  verificationStatus      FarmerVerificationStatus @default(NOT_SUBMITTED)
+  verificationSubmittedAt DateTime?
+  verifiedAt              DateTime?
+  verifiedById            String?
+  rejectionReason         String?
+  photos                  FarmerPhoto[]
 
   @@index([districtId])
+  @@index([verificationStatus, verificationSubmittedAt])
+}
+
+enum FarmerVerificationStatus {
+  NOT_SUBMITTED
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum FarmerPhotoType {
+  FARM
+  ID_CARD
+  SELFIE
+}
+
+// Stored privately; only admins can view them, through short-lived signed links.
+model FarmerPhoto {
+  id          String          @id @default(cuid())
+  userId      String
+  profile     FarmerProfile   @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  type        FarmerPhotoType
+  fileKey     String          @unique
+  contentType String
+  sizeBytes   Int
+  uploadedAt  DateTime        @default(now())
+
+  @@unique([userId, type])
 }
 
 // One-time sign-in codes. Only an HMAC of the code is stored, never the code.

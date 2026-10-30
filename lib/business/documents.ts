@@ -59,13 +59,27 @@ function signingSecret() {
   return secret;
 }
 
-function signature(documentId: string, expires: number) {
-  return createHmac("sha256", signingSecret()).update(`${documentId}:${expires}`).digest("base64url");
+function signature(subject: string, expires: number) {
+  return createHmac("sha256", signingSecret()).update(`${subject}:${expires}`).digest("base64url");
+}
+
+// Shared by every private-file link (business documents, farmer photos).
+export function signLink(subject: string, now: Date = new Date()) {
+  const expires = now.getTime() + DOCUMENT_LINK_TTL_MS;
+  return { expires, sig: signature(subject, expires) };
+}
+
+export function isValidLinkSignature(subject: string, expires: string | null, sig: string | null, now: Date = new Date()) {
+  const expiresAt = Number(expires);
+  if (!sig || !Number.isFinite(expiresAt) || expiresAt <= now.getTime()) return false;
+  const expected = Buffer.from(signature(subject, expiresAt));
+  const given = Buffer.from(sig);
+  return expected.length === given.length && timingSafeEqual(expected, given);
 }
 
 export function signedDocumentPath(documentId: string, now: Date = new Date()) {
-  const expires = now.getTime() + DOCUMENT_LINK_TTL_MS;
-  return `/api/documents/${documentId}?expires=${expires}&sig=${signature(documentId, expires)}`;
+  const { expires, sig } = signLink(documentId, now);
+  return `/api/documents/${documentId}?expires=${expires}&sig=${sig}`;
 }
 
 export type DocumentAccess =
@@ -84,11 +98,7 @@ export async function authorizeDocumentDownload(params: {
   if (!user) return { ok: false, status: 401 };
   if (user.role !== "ADMIN") return { ok: false, status: 403 };
 
-  const expiresAt = Number(expires);
-  if (!sig || !Number.isFinite(expiresAt) || expiresAt <= now.getTime()) return { ok: false, status: 403 };
-  const expected = Buffer.from(signature(documentId, expiresAt));
-  const given = Buffer.from(sig);
-  if (expected.length !== given.length || !timingSafeEqual(expected, given)) return { ok: false, status: 403 };
+  if (!isValidLinkSignature(documentId, expires, sig, now)) return { ok: false, status: 403 };
 
   const doc = await db.orgDocument.findUnique({ where: { id: documentId } });
   if (!doc) return { ok: false, status: 404 };

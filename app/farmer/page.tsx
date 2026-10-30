@@ -37,6 +37,13 @@ export default async function FarmerDashboard() {
         </p>
       </div>
 
+      {profile.verificationStatus === "PENDING" && (
+        <p role="status" className="flex items-center gap-2 rounded-2xl bg-brand-soft px-4 py-3">
+          <Icon name="shield" className="shrink-0 text-brand" />
+          {t("photos.pendingBanner")}
+        </p>
+      )}
+
       <div className="flex flex-wrap gap-5">
         <section aria-labelledby="weather-heading" className="flex min-w-0 flex-[2_1_460px] flex-col gap-4 rounded-3xl bg-brand p-5 text-white sm:p-6">
           <div className="flex items-start justify-between gap-4">

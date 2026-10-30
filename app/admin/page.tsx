@@ -12,8 +12,9 @@ export default async function AdminHome() {
   const user = await requireArea("admin");
   const { t } = await getTranslator();
   const canVerify = canVerifyOrganisations(user.role);
-  const [pending, aiOpen] = await Promise.all([
+  const [pending, pendingFarmers, aiOpen] = await Promise.all([
     canVerify ? db.organisation.count({ where: { status: "PENDING" } }) : 0,
+    canVerify ? db.farmerProfile.count({ where: { verificationStatus: "PENDING" } }) : 0,
     db.aiMessage.count({ where: { role: "ASSISTANT", reviewStatus: "OPEN" } }),
   ]);
 
@@ -31,6 +32,17 @@ export default async function AdminHome() {
           </span>
           <span className="shrink-0 whitespace-nowrap rounded-full bg-brand-soft px-3 py-1 text-sm font-semibold">
             {t("admin.pendingCount", { count: pending })}
+          </span>
+        </Link>
+      ) : null}
+      {canVerify ? (
+        <Link href="/admin/farmers" className="flex min-h-16 items-center justify-between gap-3 rounded-lg border-2 border-border px-4 py-3 hover:border-brand">
+          <span className="flex items-center gap-2 font-semibold">
+            <Icon name="sprout" className="text-brand" />
+            {t("adminFarmers.queue")}
+          </span>
+          <span className="shrink-0 whitespace-nowrap rounded-full bg-brand-soft px-3 py-1 text-sm font-semibold">
+            {t("admin.pendingCount", { count: pendingFarmers })}
           </span>
         </Link>
       ) : null}

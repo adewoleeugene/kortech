@@ -35,5 +35,6 @@ export async function saveProfileAction(_prev: OnboardingState, formData: FormDa
     const { t } = await getTranslator();
     return { errors: Object.fromEntries(result.fieldErrors.map((f) => [f, t(ERROR_KEYS[f])])) };
   }
+  // The farmer layout sends anyone still missing photo evidence to step 2.
   redirect("/farmer");
 }
