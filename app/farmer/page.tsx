@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { dayLabel, shortDayLabel, tipText } from "@/components/forecast-view";
 import { Icon, weatherIcon } from "@/components/icons";
+import { RegisteredAsNotice } from "@/components/registered-as-notice";
 import { requireArea } from "@/lib/auth/server";
 import { getFarmerProfile } from "@/lib/farmer/profile";
 import { getTranslator } from "@/lib/i18n/server";
@@ -10,7 +11,8 @@ import { describeWeather, farmingTips } from "@/lib/weather/tips";
 
 export const metadata: Metadata = { title: "My farm" };
 
-export default async function FarmerDashboard() {
+export default async function FarmerDashboard({ searchParams }: { searchParams: Promise<{ registeredAs?: string }> }) {
+  const { registeredAs } = await searchParams;
   // The layout already checked access; this re-check keeps the page safe on its own.
   const user = await requireArea("farmer");
   const [{ t, locale }, profile] = await Promise.all([getTranslator(), getFarmerProfile(user.id)]);
@@ -36,6 +38,8 @@ export default async function FarmerDashboard() {
           {profile.district.name} · {profile.crops.map((c) => c.name).join(", ")}
         </p>
       </div>
+
+      <RegisteredAsNotice registeredAs={registeredAs} />
 
       {profile.verificationStatus === "PENDING" && (
         <p role="status" className="flex items-center gap-2 rounded-2xl bg-brand-soft px-4 py-3">

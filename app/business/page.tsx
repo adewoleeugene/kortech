@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Icon } from "@/components/icons";
+import { RegisteredAsNotice } from "@/components/registered-as-notice";
 import Link from "next/link";
 import { requireArea } from "@/lib/auth/server";
 import { getOrganisationForUser, isEditable, requiredDocuments } from "@/lib/business/organisation";
@@ -16,7 +17,8 @@ const STATUS_STYLE = {
   REJECTED: "bg-red-100 text-red-950 dark:bg-red-950 dark:text-red-100",
 } as const;
 
-export default async function BusinessHome() {
+export default async function BusinessHome({ searchParams }: { searchParams: Promise<{ registeredAs?: string }> }) {
+  const { registeredAs } = await searchParams;
   const user = await requireArea("business");
   const [{ t }, org] = await Promise.all([getTranslator(), getOrganisationForUser(user.id)]);
   if (!org) return null;
@@ -35,6 +37,7 @@ export default async function BusinessHome() {
 
   return (
     <div className="space-y-8">
+      <RegisteredAsNotice registeredAs={registeredAs} />
       <div className="space-y-1">
         <p className="text-muted">{t("business.title")}</p>
         <h1 className="text-2xl font-bold">{org.legalName}</h1>

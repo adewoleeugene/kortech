@@ -65,7 +65,20 @@
     "resend": "Send a new code",
     "codeResent": "We sent you a new code.",
     "changeNumber": "Use a different number",
-    "accountClosed": "This account has been closed."
+    "accountClosed": "This account has been closed.",
+    "chooseTitle": "Who are you?",
+    "chooseIntro": "Choose how you will use Kortech. Then sign in with your phone.",
+    "as_farmer": "Farmer",
+    "as_farmerHint": "Get farming advice, weather and find inputs",
+    "as_supplier": "Input supplier",
+    "as_supplierHint": "Sell seeds, fertiliser, tools or machinery",
+    "as_buyer": "Produce buyer",
+    "as_buyerHint": "Buy crops from farmers",
+    "as_lender": "Lender",
+    "as_lenderHint": "Microfinance or bank offering loans to farmers",
+    "returning": "I already have an account",
+    "changeType": "Change",
+    "registeredAs": "This phone number is registered as: {type}. One number can have only one kind of account."
   },
   "photos": {
     "step": "Step 2 of 2",

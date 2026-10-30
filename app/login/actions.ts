@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { homePathForRole, safeNextPath } from "@/lib/auth/access";
+import { type AccountType, accountTypeForRole, orgTypeFor, parseAccountType } from "@/lib/auth/account-type";
 import { createDemoNewUser, ensureDemoAccount, isDemoAccountKey, isDemoMode } from "@/lib/auth/demo";
 import { requestOtp, verifyOtp } from "@/lib/auth/otp";
 import { getClientIp, signIn } from "@/lib/auth/server";
@@ -20,11 +21,15 @@ const DEMO_CODE_COOKIE = "sf_demo_code";
 
 export type FormState = { error?: string; notice?: string };
 
-const requestSchema = z.object({ phone: z.string().max(30), next: z.string().max(500).optional() });
-const verifySchema = z.object({ code: z.string().max(20), next: z.string().max(500).optional() });
+const requestSchema = z.object({ phone: z.string().max(30), next: z.string().max(500).optional(), as: z.string().max(20).optional() });
+const verifySchema = z.object({ code: z.string().max(20), next: z.string().max(500).optional(), as: z.string().max(20).optional() });
 
-function verifyPath(next: string | null) {
-  return next ? `/login/verify?next=${encodeURIComponent(next)}` : "/login/verify";
+function verifyPath(next: string | null, accountType: AccountType | null) {
+  const params = new URLSearchParams();
+  if (next) params.set("next", next);
+  if (accountType) params.set("as", accountType);
+  const query = params.toString();
+  return query ? `/login/verify?${query}` : "/login/verify";
 }
 
 async function sendCode(phone: string): Promise<FormState | null> {
@@ -46,7 +51,7 @@ export async function requestOtpAction(_prev: FormState, formData: FormData): Pr
 
   const failure = await sendCode(phone);
   if (failure) return failure;
-  redirect(verifyPath(safeNextPath(parsed.data.next)));
+  redirect(verifyPath(safeNextPath(parsed.data.next), parseAccountType(parsed.data.as)));
 }
 
 export async function resendOtpAction(): Promise<FormState> {
@@ -86,12 +91,21 @@ export async function verifyOtpAction(_prev: FormState, formData: FormData): Pro
   jar.delete({ name: PENDING_PHONE_COOKIE, path: "/login" });
   jar.delete({ name: DEMO_CODE_COOKIE, path: "/login" });
 
+  const next = safeNextPath(parsed.data?.next);
+  const chosen = parseAccountType(parsed.data?.as) ?? (next === "/register-business" ? "supplier" : null);
+
   if (user.role === "FARMER") {
     const hasProfile = await db.farmerProfile.count({ where: { userId: user.id } });
-    // New accounts choose: farmer onboarding, or business registration if they came from "I run a business".
-    if (!hasProfile) redirect(safeNextPath(parsed.data?.next) === "/register-business" ? "/register-business" : "/onboarding");
+    // A new (or unfinished) account follows the type chosen at sign-in.
+    if (!hasProfile) {
+      const orgType = chosen && orgTypeFor(chosen);
+      redirect(orgType ? `/register-business?type=${orgType}` : "/onboarding");
+    }
   }
-  redirect(safeNextPath(parsed.data?.next) ?? homePathForRole(user.role));
+  // An existing account keeps its type; tell them if they picked a different one.
+  const registeredAs = accountTypeForRole(user.role);
+  if (chosen && registeredAs && chosen !== registeredAs) redirect(`${homePathForRole(user.role)}?registeredAs=${registeredAs}`);
+  redirect(next ?? homePathForRole(user.role));
 }
 
 // Demo mode only: sign straight in as a sample account, or as a new account to try sign-up.

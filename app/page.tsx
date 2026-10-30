@@ -41,7 +41,7 @@ export default async function HomePage() {
             <PhoneForm labels={{ phoneLabel: t("login.phoneLabel"), phoneHint: t("login.phoneHint"), sendCode: t("login.sendCode") }} />
             <p className="text-center text-sm text-muted">
               {t("home.businessLine")}{" "}
-              <Link href="/login?next=/register-business" className="font-bold">
+              <Link href="/login" className="font-bold">
                 {t("home.businessCta")}
               </Link>
             </p>

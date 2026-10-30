@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { safeNextPath } from "@/lib/auth/access";
+import { parseAccountType } from "@/lib/auth/account-type";
 import { isDemoMode } from "@/lib/auth/demo";
 import { getTranslator } from "@/lib/i18n/server";
 import { formatPhoneForDisplay } from "@/lib/phone";
@@ -10,8 +11,8 @@ import { VerifyForm } from "./verify-form";
 
 export const metadata: Metadata = { title: "Enter your code" };
 
-export default async function VerifyPage({ searchParams }: { searchParams: Promise<{ next?: string }> }) {
-  const [{ t }, jar, { next }] = await Promise.all([getTranslator(), cookies(), searchParams]);
+export default async function VerifyPage({ searchParams }: { searchParams: Promise<{ next?: string; as?: string }> }) {
+  const [{ t }, jar, { next, as }] = await Promise.all([getTranslator(), cookies(), searchParams]);
   const phone = jar.get("sf_otp_phone")?.value;
   if (!phone) redirect("/login");
   const display = formatPhoneForDisplay(phone);
@@ -31,6 +32,7 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
       )}
       <VerifyForm
         next={safeNextPath(next) ?? undefined}
+        accountType={parseAccountType(as) ?? undefined}
         labels={{
           codeLabel: t("login.codeLabel"),
           verify: t("login.verify"),
@@ -38,7 +40,7 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
         }}
       />
       <p className="text-center">
-        <Link href="/login" className="inline-flex min-h-12 items-center text-muted underline underline-offset-4">
+        <Link href={`/login?as=${parseAccountType(as) ?? "returning"}`} className="inline-flex min-h-12 items-center text-muted underline underline-offset-4">
           {t("login.changeNumber")}
         </Link>
       </p>

@@ -7,11 +7,12 @@ import { type FormState, requestOtpAction } from "./actions";
 
 type Labels = { phoneLabel: string; phoneHint: string; sendCode: string };
 
-export function PhoneForm({ labels, next }: { labels: Labels; next?: string }) {
+export function PhoneForm({ labels, next, accountType }: { labels: Labels; next?: string; accountType?: string }) {
   const [state, action] = useActionState<FormState, FormData>(requestOtpAction, {});
   return (
     <form action={action} className="space-y-4">
       {next && <input type="hidden" name="next" value={next} />}
+      {accountType && <input type="hidden" name="as" value={accountType} />}
       <div className="space-y-1">
         <label htmlFor="phone" className="block font-bold">
           {labels.phoneLabel}

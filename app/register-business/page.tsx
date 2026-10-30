@@ -11,8 +11,13 @@ import { RegisterForm } from "./register-form";
 
 export const metadata: Metadata = { title: "Register your organisation" };
 
-export default async function RegisterBusinessPage() {
+const ORG_TYPES = ["SUPPLIER", "BUYER", "LENDER"] as const;
+
+export default async function RegisterBusinessPage({ searchParams }: { searchParams: Promise<{ type?: string }> }) {
   const user = await requireUser("/register-business");
+  // The business type chosen at sign-in (?type=SUPPLIER|BUYER|LENDER) is preselected.
+  const { type: requestedType } = await searchParams;
+  const chosenType = ORG_TYPES.find((type) => type === requestedType) ?? "";
   const hasFarmerProfile = (await db.farmerProfile.count({ where: { userId: user.id } })) > 0;
   if (!canRegisterBusiness(user.role, hasFarmerProfile)) redirect("/forbidden");
 
@@ -29,7 +34,7 @@ export default async function RegisterBusinessPage() {
       <RegisterForm
         districts={districts.map((d) => ({ id: d.id, name: d.name }))}
         defaults={{
-          type: org?.type ?? "",
+          type: org?.type ?? chosenType,
           legalName: org?.legalName ?? "",
           regNumber: org?.regNumber ?? "",
           address: org?.address ?? "",

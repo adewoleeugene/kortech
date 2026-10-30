@@ -7,13 +7,14 @@ import { type FormState, resendOtpAction, verifyOtpAction } from "../actions";
 
 type Labels = { codeLabel: string; verify: string; resend: string };
 
-export function VerifyForm({ labels, next }: { labels: Labels; next?: string }) {
+export function VerifyForm({ labels, next, accountType }: { labels: Labels; next?: string; accountType?: string }) {
   const [state, verify] = useActionState<FormState, FormData>(verifyOtpAction, {});
   const [resendState, resend] = useActionState<FormState>(resendOtpAction, {});
   return (
     <div className="space-y-6">
       <form action={verify} className="space-y-4">
         {next && <input type="hidden" name="next" value={next} />}
+        {accountType && <input type="hidden" name="as" value={accountType} />}
         <div className="space-y-1">
           <label htmlFor="code" className="block font-semibold">
             {labels.codeLabel}
