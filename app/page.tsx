@@ -5,7 +5,7 @@ import { homePathForRole } from "@/lib/auth/access";
 import { getCurrentUser } from "@/lib/auth/server";
 import type { TranslationKey } from "@/lib/i18n";
 import { getTranslator } from "@/lib/i18n/server";
-import { PhoneForm } from "./login/phone-form";
+import { AccountTypeCards } from "./login/account-type-cards";
 
 export const dynamic = "force-dynamic";
 
@@ -35,16 +35,10 @@ export default async function HomePage() {
 
           <div className="flex w-full min-w-0 max-w-md flex-[1_1_340px] flex-col gap-4 rounded-[28px] bg-surface px-6 py-7 text-foreground shadow-xl shadow-brand-dark/20">
             <div className="space-y-1">
-              <h2 className="text-[26px] leading-tight font-bold">{t("login.title")}</h2>
-              <p className="text-[15px] text-muted">{t("login.intro")}</p>
+              <h2 className="text-[26px] leading-tight font-bold">{t("login.chooseTitle")}</h2>
+              <p className="text-[15px] text-muted">{t("login.chooseIntro")}</p>
             </div>
-            <PhoneForm labels={{ phoneLabel: t("login.phoneLabel"), phoneHint: t("login.phoneHint"), sendCode: t("login.sendCode") }} />
-            <p className="text-center text-sm text-muted">
-              {t("home.businessLine")}{" "}
-              <Link href="/login" className="font-bold">
-                {t("home.businessCta")}
-              </Link>
-            </p>
+            <AccountTypeCards />
           </div>
         </div>
       </section>
