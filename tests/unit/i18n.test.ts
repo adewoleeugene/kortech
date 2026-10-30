@@ -6,7 +6,7 @@ const t = createTranslator("en");
 
 describe("translator", () => {
   it("returns the English string for a key", () => {
-    expect(t("app.name")).toBe("SmartFarm Sierra Leone");
+    expect(t("app.name")).toBe("Kortech Sierra Leone");
   });
 
   it("interpolates variables", () => {

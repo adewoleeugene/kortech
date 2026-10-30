@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* SmartFarm design tokens (see the design canvas): deep farm green, sun-yellow accent,
+/* Kortech design tokens (see the design canvas): deep farm green, sun-yellow accent,
    light warm ground. High contrast and large tap targets for low-end phones (PRD 7). */
 :root {
   --background: #f5f6f1;

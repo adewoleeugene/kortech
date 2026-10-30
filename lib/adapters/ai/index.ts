@@ -78,8 +78,8 @@ export class MockAiProvider implements AiProvider {
 
     const source = last.match(/^\[1\] (.+?):$/m)?.[1];
     const text = source
-      ? `Here is what the SmartFarm guide says [1]:\n\n- Follow the advice in "${source}".\n- Ask your extension officer if the problem is serious.`
-      : "I don't have a reviewed SmartFarm guide on this yet.\n\n- Ask your local extension officer for advice on your farm.";
+      ? `Here is what the Kortech guide says [1]:\n\n- Follow the advice in "${source}".\n- Ask your extension officer if the problem is serious.`
+      : "I don't have a reviewed Kortech guide on this yet.\n\n- Ask your local extension officer for advice on your farm.";
     return { ok: true, text, model: "mock", truncated: false };
   }
 }

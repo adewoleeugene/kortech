@@ -70,12 +70,12 @@ describe("user message", () => {
       crops: ["Rice"],
     });
     expect(msg).toBe(
-      "SmartFarm guide excerpts:\n\n[1] Rice, Pests:\nScare birds early in the morning.\n\nAbout the farmer: district: Bo; crops: Rice.\n\nFarmer's question: Birds eat my rice",
+      "Kortech guide excerpts:\n\n[1] Rice, Pests:\nScare birds early in the morning.\n\nAbout the farmer: district: Bo; crops: Rice.\n\nFarmer's question: Birds eat my rice",
     );
   });
 
   it("says when no excerpts match", () => {
-    expect(buildUserMessage("Hello there", { sources: [] })).toContain("No SmartFarm guide excerpts match this question.");
+    expect(buildUserMessage("Hello there", { sources: [] })).toContain("No Kortech guide excerpts match this question.");
   });
 });
 

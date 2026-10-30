@@ -1,4 +1,4 @@
-// SmartFarm Sierra Leone — database schema.
+// Kortech Sierra Leone — database schema.
 // Milestone 1 holds reference data only; later milestones add their models here.
 
 generator client {

@@ -20,7 +20,7 @@ async function ask(page: Page, question: string) {
 test("a farmer asks a question, gets an answer citing the guide, rates it and reports it; a reviewer corrects it", async ({ page, browser }) => {
   await onboardFarmer(page);
   await page.getByRole("link", { name: /Ask a farming question/ }).click();
-  await expect(page.getByText("Your questions are saved so SmartFarm staff can check the quality of answers.")).toBeVisible();
+  await expect(page.getByText("Your questions are saved so Kortech staff can check the quality of answers.")).toBeVisible();
   await expect(page.getByTestId("remaining")).toHaveText("20 of 20 questions left today");
 
   await ask(page, "Birds are eating my rice. What can I do?");
@@ -43,7 +43,7 @@ test("a farmer asks a question, gets an answer citing the guide, rates it and re
   await page.getByTestId("answer").first().getByText("Report a problem").click();
   await page.getByTestId("answer").first().getByLabel("What is wrong with this answer? (optional)").fill("Scarecrows don't work on my farm");
   await page.getByTestId("answer").first().getByRole("button", { name: "Send report" }).click();
-  await expect(page.getByTestId("answer").first()).toContainText("Reported. SmartFarm staff will check this answer.");
+  await expect(page.getByTestId("answer").first()).toContainText("Reported. Kortech staff will check this answer.");
 
   // An agronomist sees it in the review queue and adds a correction.
   const reviewerContext = await browser.newContext();

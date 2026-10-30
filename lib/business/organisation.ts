@@ -182,8 +182,8 @@ async function decide(
 async function notifyDecision(phone: string, legalName: string, status: "APPROVED" | "REJECTED", reason: string | null) {
   const message =
     status === "APPROVED"
-      ? `SmartFarm: ${legalName} is now verified. You can publish listings.`
-      : `SmartFarm: ${legalName} was not verified. Reason: ${reason}. Sign in to fix and resubmit.`;
+      ? `Kortech: ${legalName} is now verified. You can publish listings.`
+      : `Kortech: ${legalName} was not verified. Reason: ${reason}. Sign in to fix and resubmit.`;
   try {
     // SMS limit is 160 characters per part; long reasons span several parts.
     await getSmsProvider().send(phone, message);

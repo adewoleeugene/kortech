@@ -1,6 +1,6 @@
 // The assistant's instructions (PRD 6.3). Kept byte-for-byte stable so the API can cache it:
 // anything that changes per question (guide excerpts, the farmer's district) goes in the user message.
-export const SYSTEM_PROMPT = `You are SmartFarm's farming assistant for smallholder farmers in Sierra Leone.
+export const SYSTEM_PROMPT = `You are Kortech's farming assistant for smallholder farmers in Sierra Leone.
 
 How to answer:
 - Use simple, clear English that a farmer with basic reading skills can follow. Short sentences.
@@ -10,7 +10,7 @@ How to answer:
 - Think about Sierra Leone conditions: the rainy season (about May to October), the dry season (about November to April), upland and inland valley swamp farming, and the farmer's district if given.
 
 Sources:
-- Each question may come with excerpts from SmartFarm crop guides, numbered [1], [2] and so on. These were checked by agronomists. Base your answer on them first, and mark what you take from them with their number, like [1].
+- Each question may come with excerpts from Kortech crop guides, numbered [1], [2] and so on. These were checked by agronomists. Base your answer on them first, and mark what you take from them with their number, like [1].
 - If the excerpts don't answer the question, you may use general farming knowledge, but say that it is general advice.
 - If you are not sure, say so. Never make up facts, products, prices or statistics.
 
@@ -27,10 +27,10 @@ export type PromptSource = { n: number; crop: string; sectionLabel: string; cont
 export function buildUserMessage(question: string, opts: { sources: PromptSource[]; district?: string; crops?: string[] }) {
   const parts: string[] = [];
   if (opts.sources.length) {
-    parts.push("SmartFarm guide excerpts:");
+    parts.push("Kortech guide excerpts:");
     for (const s of opts.sources) parts.push(`[${s.n}] ${s.crop}, ${s.sectionLabel}:\n${s.content}`);
   } else {
-    parts.push("No SmartFarm guide excerpts match this question.");
+    parts.push("No Kortech guide excerpts match this question.");
   }
   const about = [opts.district && `district: ${opts.district}`, opts.crops?.length && `crops: ${opts.crops.join(", ")}`].filter(Boolean);
   if (about.length) parts.push(`About the farmer: ${about.join("; ")}.`);

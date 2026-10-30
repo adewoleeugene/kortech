@@ -66,7 +66,7 @@ export default async function CropGuidePage({ params }: { params: Promise<{ crop
                 {g.reviewedAt && (
                   <p className="flex items-center gap-1.5 text-sm text-muted">
                     <Icon name="shield" size={16} className="text-brand" />
-                    {t("guides.reviewedBy", { name: g.reviewedBy?.name ?? "SmartFarm", date: date(g.reviewedAt) })}
+                    {t("guides.reviewedBy", { name: g.reviewedBy?.name ?? "Kortech", date: date(g.reviewedAt) })}
                   </p>
                 )}
               </section>

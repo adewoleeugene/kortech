@@ -1,4 +1,4 @@
-// Stroke icons used across SmartFarm (replacing emoji, which render differently on every phone).
+// Stroke icons used across Kortech (replacing emoji, which render differently on every phone).
 // Decorative by default: give the surrounding control an accessible name instead.
 
 const PATHS = {

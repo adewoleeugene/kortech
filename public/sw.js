@@ -1,4 +1,4 @@
-// SmartFarm service worker (PRD 7: offline crop guides and last weather forecast).
+// Kortech service worker (PRD 7: offline crop guides and last weather forecast).
 // Hand-written and small on purpose. Bump VERSION when this file's caching rules change.
 const VERSION = "v2";
 const PAGES = `sf-pages-${VERSION}`;

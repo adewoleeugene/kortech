@@ -9,7 +9,7 @@ import { getTranslator } from "@/lib/i18n/server";
 import { rateAction, reportAction } from "./actions";
 import { AskForm } from "./ask-form";
 
-export const metadata: Metadata = { title: "Ask SmartFarm" };
+export const metadata: Metadata = { title: "Ask Kortech" };
 
 export default async function AssistantPage({ searchParams }: { searchParams: Promise<{ c?: string; new?: string }> }) {
   const user = await requireArea("farmer");

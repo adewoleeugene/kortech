@@ -1,4 +1,4 @@
-# SmartFarm Sierra Leone — Product Requirements Document (PRD)
+# Kortech Sierra Leone — Product Requirements Document (PRD)
 
 **Version:** 0.1 (MVP draft)
 **Owner:** Martha Kabba
@@ -19,7 +19,7 @@
 
 ## 2. Product summary
 
-SmartFarm Sierra Leone is a digital agriculture platform that gives farmers, in one place:
+Kortech Sierra Leone is a digital agriculture platform that gives farmers, in one place:
 
 - Farming advice (AI-assisted, locally reviewed)
 - Weather forecasts for their location
@@ -47,7 +47,7 @@ Businesses (suppliers, buyers, banks/lenders) register through the web app, get 
 ### Non-goals (MVP)
 - In-app payments or escrow (farmers and businesses pay each other directly; added later).
 - Native iOS/Android apps (we ship a Progressive Web App first).
-- Loan approval or credit scoring (SmartFarm only refers farmers to lenders).
+- Loan approval or credit scoring (Kortech only refers farmers to lenders).
 - Logistics or delivery management.
 - Full USSD coverage of all features (USSD MVP is a limited menu, Milestone 7).
 
@@ -61,7 +61,7 @@ Businesses (suppliers, buyers, banks/lenders) register through the web app, get 
 | **Supplier** | Sells seeds, fertiliser, tools, machinery | Reach farmers, manage product listings |
 | **Buyer** | Trader, processor, exporter, institution | Find produce, contact farmers |
 | **Lender** | Bank, microfinance institution, mobile money lender | Publish loan products, receive farmer referrals |
-| **Admin** | SmartFarm staff | Verify businesses, moderate content, view analytics |
+| **Admin** | Kortech staff | Verify businesses, moderate content, view analytics |
 | **Agronomist reviewer** | Extension officer or expert (can be an Admin sub-role) | Review and approve advice content |
 
 A user account has one primary role. Business accounts (Supplier, Buyer, Lender) belong to an **Organisation** that has a verification status.
@@ -145,7 +145,7 @@ A user account has one primary role. Business accounts (Supplier, Buyer, Lender)
 - Lenders publish loan products: name, purpose (inputs, equipment, working capital), amount range, term, eligibility summary.
 - Farmer taps "I'm interested" → consent screen listing exactly which profile fields will be shared → referral created.
 - Lender sees referrals and updates status (New / Contacted / Closed).
-- SmartFarm does **not** make lending decisions or display interest rates it hasn't verified.
+- Kortech does **not** make lending decisions or display interest rates it hasn't verified.
 
 ### 6.8 Business registration and verification
 - Organisation fields: legal name, type (supplier/buyer/lender), registration number, address, district, contact person, phone, email.

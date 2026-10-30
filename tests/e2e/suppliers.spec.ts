@@ -104,7 +104,7 @@ test("an admin hides a listing and marks one as sponsored", async ({ page }) => 
 
   const thresher = page.getByTestId("admin-listing").filter({ hasText: "Rice thresher" });
   await thresher.getByRole("button", { name: "Hide" }).click();
-  await expect(thresher).toContainText("Hidden by SmartFarm");
+  await expect(thresher).toContainText("Hidden by Kortech");
   await page.goto("/suppliers?q=thresher&district=all");
   await expect(page.getByTestId("result-count")).toHaveText("0 results");
 

@@ -44,7 +44,7 @@ export async function requestOtp(phone: string, ip: string, now: Date = new Date
     db.otpCode.create({ data: { phone, codeHash: hashOtp(phone, code), expiresAt, createdAt: now } }),
   ]);
 
-  await getSmsProvider().send(phone, `Your SmartFarm code is ${code}. It expires in 5 minutes. Do not share it.`);
+  await getSmsProvider().send(phone, `Your Kortech code is ${code}. It expires in 5 minutes. Do not share it.`);
   return { ok: true, expiresAt };
 }
 
