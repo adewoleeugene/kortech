@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { safeNextPath } from "@/lib/auth/access";
+import { isDemoMode } from "@/lib/auth/demo";
 import { getTranslator } from "@/lib/i18n/server";
 import { formatPhoneForDisplay } from "@/lib/phone";
 import { VerifyForm } from "./verify-form";
@@ -14,6 +15,7 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
   const phone = jar.get("sf_otp_phone")?.value;
   if (!phone) redirect("/login");
   const display = formatPhoneForDisplay(phone);
+  const demoCode = isDemoMode() ? jar.get("sf_demo_code")?.value : undefined;
 
   return (
     <div>
@@ -22,6 +24,11 @@ export default async function VerifyPage({ searchParams }: { searchParams: Promi
         <h1 className="text-3xl font-bold">{t("login.verifyTitle")}</h1>
         <p className="text-muted">{t("login.verifyIntro", { phone: display })}</p>
       </div>
+      {demoCode && (
+        <p role="status" className="rounded-2xl border-2 border-dashed border-brand bg-brand-soft px-4 py-3 text-center">
+          {t("demo.codeOnScreen")} <strong className="text-2xl tracking-[0.3em] text-brand-dark">{demoCode}</strong>
+        </p>
+      )}
       <VerifyForm
         next={safeNextPath(next) ?? undefined}
         labels={{

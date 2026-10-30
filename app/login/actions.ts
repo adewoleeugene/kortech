@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { homePathForRole, safeNextPath } from "@/lib/auth/access";
+import { createDemoNewUser, ensureDemoAccount, isDemoAccountKey, isDemoMode } from "@/lib/auth/demo";
 import { requestOtp, verifyOtp } from "@/lib/auth/otp";
 import { getClientIp, signIn } from "@/lib/auth/server";
 import { findOrCreateUserByPhone } from "@/lib/auth/users";
@@ -14,6 +15,8 @@ import { normalizeSierraLeonePhone } from "@/lib/phone";
 // The number being verified is kept in a short-lived httpOnly cookie,
 // so it never appears in a URL (PRD 7, Privacy).
 const PENDING_PHONE_COOKIE = "sf_otp_phone";
+// Demo mode only: the latest code, so the verify page can show it.
+const DEMO_CODE_COOKIE = "sf_demo_code";
 
 export type FormState = { error?: string; notice?: string };
 
@@ -28,13 +31,10 @@ async function sendCode(phone: string): Promise<FormState | null> {
   const { t } = await getTranslator();
   const result = await requestOtp(phone, await getClientIp());
   if (!result.ok) return { error: t("login.rateLimited", { minutes: Math.ceil(result.retryAfterSeconds / 60) }) };
-  (await cookies()).set(PENDING_PHONE_COOKIE, phone, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/login",
-    maxAge: 15 * 60,
-  });
+  const jar = await cookies();
+  const options = { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax" as const, path: "/login" };
+  jar.set(PENDING_PHONE_COOKIE, phone, { ...options, maxAge: 15 * 60 });
+  if (result.demoCode) jar.set(DEMO_CODE_COOKIE, result.demoCode, { ...options, maxAge: 5 * 60 });
   return null;
 }
 
@@ -84,6 +84,7 @@ export async function verifyOtpAction(_prev: FormState, formData: FormData): Pro
   if (!user) return { error: t("login.accountClosed") };
   await signIn(user.id);
   jar.delete({ name: PENDING_PHONE_COOKIE, path: "/login" });
+  jar.delete({ name: DEMO_CODE_COOKIE, path: "/login" });
 
   if (user.role === "FARMER") {
     const hasProfile = await db.farmerProfile.count({ where: { userId: user.id } });
@@ -91,4 +92,21 @@ export async function verifyOtpAction(_prev: FormState, formData: FormData): Pro
     if (!hasProfile) redirect(safeNextPath(parsed.data?.next) === "/register-business" ? "/register-business" : "/onboarding");
   }
   redirect(safeNextPath(parsed.data?.next) ?? homePathForRole(user.role));
+}
+
+// Demo mode only: sign straight in as a sample account, or as a new account to try sign-up.
+export async function demoSignInAction(formData: FormData) {
+  if (!isDemoMode()) redirect("/login");
+  const key = String(formData.get("account") ?? "");
+
+  if (key === "newFarmer" || key === "newBusiness") {
+    const user = await createDemoNewUser();
+    await signIn(user.id);
+    redirect(key === "newBusiness" ? "/register-business" : "/onboarding");
+  }
+  if (!isDemoAccountKey(key)) redirect("/login");
+
+  const user = await ensureDemoAccount(key);
+  await signIn(user.id);
+  redirect(homePathForRole(user.role));
 }

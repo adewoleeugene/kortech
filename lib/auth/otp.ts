@@ -23,7 +23,8 @@ export function generateOtp(): string {
 }
 
 export type RequestOtpResult =
-  | { ok: true; expiresAt: Date }
+  // demoCode is set only in demo mode, so the code can be shown on screen.
+  | { ok: true; expiresAt: Date; demoCode?: string }
   | { ok: false; reason: "rate_limited"; retryAfterSeconds: number };
 
 // `phone` must already be E.164 (see lib/phone.ts).
@@ -45,7 +46,7 @@ export async function requestOtp(phone: string, ip: string, now: Date = new Date
   ]);
 
   await getSmsProvider().send(phone, `Your Kortech code is ${code}. It expires in 5 minutes. Do not share it.`);
-  return { ok: true, expiresAt };
+  return { ok: true, expiresAt, ...(process.env.DEMO_MODE === "true" && { demoCode: code }) };
 }
 
 export type VerifyOtpResult =

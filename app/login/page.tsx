@@ -3,6 +3,8 @@ import { redirect } from "next/navigation";
 import { homePathForRole, safeNextPath } from "@/lib/auth/access";
 import { getCurrentUser } from "@/lib/auth/server";
 import { getTranslator } from "@/lib/i18n/server";
+import { isDemoMode } from "@/lib/auth/demo";
+import { DemoAccounts } from "./demo-accounts";
 import { PhoneForm } from "./phone-form";
 
 export const metadata: Metadata = { title: "Sign in" };
@@ -22,6 +24,7 @@ export default async function LoginPage({ searchParams }: { searchParams: Promis
         next={safeNextPath(next) ?? undefined}
         labels={{ phoneLabel: t("login.phoneLabel"), phoneHint: t("login.phoneHint"), sendCode: t("login.sendCode") }}
       />
+      {isDemoMode() && <DemoAccounts />}
       </div>
     </div>
   );

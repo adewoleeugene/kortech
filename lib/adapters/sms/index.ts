@@ -33,8 +33,9 @@ export function getSmsProvider(): SmsProvider {
   if (provider) return provider;
   const kind = process.env.SMS_PROVIDER ?? "mock";
   if (kind !== "mock") throw new Error(`Unknown SMS_PROVIDER "${kind}"`);
-  // The mock logs codes in plain text, so it must never run in production.
-  if (process.env.NODE_ENV === "production" && process.env.ALLOW_MOCK_SMS !== "true") {
+  // The mock logs codes in plain text, so it must never run in production (demo mode excepted).
+  const allowed = process.env.ALLOW_MOCK_SMS === "true" || process.env.DEMO_MODE === "true";
+  if (process.env.NODE_ENV === "production" && !allowed) {
     throw new Error("The mock SMS provider is disabled in production. Configure a real SMS_PROVIDER.");
   }
   provider = new MockSmsProvider(process.env.SMS_OUTBOX_FILE || undefined);
